@@ -6,9 +6,5 @@ app = Flask(__name__)
 def hello_world():
 	return render_template('enterquery.html')
 
-@app.route('/show_analysis', methods="POST")
-def return_query():
-		return render_template('return_query.html')
- 
 if __name__ == '__main__':
 	app.run(debug=True)
