@@ -6,11 +6,8 @@ app = Flask(__name__)
 def hello_world():
 	return render_template('enterquery.html')
 
-@app.route('/show_analysis', methods=["GET","POST"])
+@app.route('/show_analysis', methods="POST")
 def return_query():
-	if request.method=="POST":
-		return "Comming soon"
-	if request.method=="GET":
 		return "But not as soon as you think"
  
 if __name__ == '__main__':
