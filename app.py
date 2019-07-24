@@ -8,7 +8,7 @@ def hello_world():
 
 @app.route('/show_analysis', methods="POST")
 def return_query():
-		return "But not as soon as you think"
+		return render_template('return_query.html')
  
 if __name__ == '__main__':
 	app.run(debug=True)
