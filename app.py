@@ -10,7 +10,7 @@ def hello_world():
 
 @app.route('/show_analysis', methods=["GET","POST"])
 def return_query():
-	if methods=="POST":
+	if request.method=="POST":
 		app.vars['query']=request.form['query']
 		return render_template('returnquery.html')
  
