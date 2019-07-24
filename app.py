@@ -6,7 +6,7 @@ app = Flask(__name__)
 def hello_world():
 	return render_template('enterquery.html')
 
-@app.route('/show_analysis')
+@app.route('/show_analysis', methods=["POST"])
 def return_query():
 	return "Hello again!"
  
