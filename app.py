@@ -8,7 +8,7 @@ app.vars={}
 def hello_world():
 	return render_template('enterquery.html')
 
-@app.route('/show_analysis', methods=["GET"])
+@app.route('/show_analysis', methods=["GET","POST"])
 def return_query():
 	app.vars['query']=request.form['query']
 	return render_template('returnquery.html')
