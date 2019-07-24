@@ -9,7 +9,9 @@ def hello_world():
 @app.route('/show_analysis', methods=["GET","POST"])
 def return_query():
 	if request.method=="POST":
-		return render_template('returnquery.html')
+		return "Comming soon"
+	if request.method=="GET":
+		return "But not as soon as you think"
  
 if __name__ == '__main__':
 	app.run(debug=True)
