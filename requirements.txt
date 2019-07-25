@@ -1,2 +1,9 @@
 Flask
 gunicorn
+twython
+pandas
+numpy
+nltk
+matplotlib
+textblob
+
