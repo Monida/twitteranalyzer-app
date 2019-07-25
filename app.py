@@ -24,7 +24,7 @@ def return_query():
 		topics=find_topics(tweets)
 
 		return render_template('returnquery.html', query=app.vars['query'], 
-			num_of_tweets=app.vars['num_of_tweets'])
+			num_of_tweets=app.vars['num_of_tweets'],table=topics.to_html())
 
 def clean_search():
 	app.vars['query']=''
