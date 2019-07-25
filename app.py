@@ -10,7 +10,7 @@ def hello_world():
 @app.route('/show_analysis',methods=["POST"])
 def return_query():
 	app.vars['query']=request.form['query']
-	return app.vars['query']
+	return render_template('returnquery.html', query=app.vars['query'])
 
 if __name__ == '__main__':
-	app.run(debug=True)
+	app.run(debug=True) 
