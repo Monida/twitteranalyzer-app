@@ -21,7 +21,7 @@ def return_query():
 
 		app.vars['num_of_tweets']=len(tweets)
 
-		topics=find_topics(tweets)
+		#topics=find_topics(tweets)
 
 		return render_template('returnquery.html', query=app.vars['query'], num_of_tweets=app.vars['num_of_tweets'])
 
