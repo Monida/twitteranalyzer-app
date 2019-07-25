@@ -8,7 +8,7 @@ def hello_world():
 
 @app.route('/show_analysis',methods=["POST"])
 def return_query():
-	return "Sorry this app doesn't analyze tweets yet. But wouldn't it be cool if it did?"
+	return render_template('returnquery.html')
 
 if __name__ == '__main__':
 	app.run(debug=True)
