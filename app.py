@@ -15,6 +15,8 @@ def return_query():
 	if request.method=="POST":
 		app.vars['query']=request.form['query']
 
+		#Analyze tweets
+
 		return render_template('returnquery.html', query=app.vars['query'])
 
 def clean_search():
