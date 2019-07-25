@@ -265,7 +265,7 @@ def clean_and_tokenize(tweets):
 
 def manualModelling(tweets):
     # Manually classify the topic
-    topics=pd.read_csv('data/keyword_list.csv',sep=',')
+    topics=pd.read_csv('static/keyword_list.csv',sep=',')
     topics_dict={}
     
     for topic in topics.columns:
@@ -328,7 +328,8 @@ def fit_LDA(words_matrix,number_of_topics=10):
 
 
 def top_topics(tweets,n=5):
-    
+    #Tweets: the tweets dataframe 
+    #n: top n topics
     topics=tweets.groupby('topic_1').count()
 
     topics=topics.rename(columns = {'text':'count'})
