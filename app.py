@@ -2,6 +2,7 @@ from flask import Flask,render_template, request
 
 app = Flask(__name__)
 app.vars={}
+app.vars['query']=''
 
 @app.route('/',methods=["GET","POST"])
 def hello_world():
@@ -9,7 +10,7 @@ def hello_world():
 		return render_template('enterquery.html')
 	if request.method=="POST":
 		if app.vars['query']!='':
-			app.vars['query']==''
+			clean_search()
 		return render_template('enterquery.html')
 
 @app.route('/show_analysis',methods=["POST"])
