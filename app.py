@@ -17,5 +17,9 @@ def return_query():
 	app.vars['query']=request.form['query']
 	return render_template('returnquery.html', query=app.vars['query'])
 
+def clean_search():
+	app.vars['query']=''
+	return None
+
 if __name__ == '__main__':
 	app.run(debug=True) 
