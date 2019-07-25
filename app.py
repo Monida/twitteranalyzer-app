@@ -1,4 +1,4 @@
-from flask import Flask,render_template
+from flask import Flask,render_template, request
 
 app = Flask(__name__)
 app.vars={}
@@ -9,7 +9,6 @@ def hello_world():
 
 @app.route('/show_analysis',methods=["POST"])
 def return_query():
-	#app.vars['query']=request.form['query']
 	myword=request.form['query']
 	return render_template('returnquery.html')
 
