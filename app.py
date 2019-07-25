@@ -23,6 +23,11 @@ def return_query():
 
 		topics=find_topics(tweets)
 
+		# Plot polarity
+		fig=twitter_analyzer.create_figure(tweets)
+		fig.savefig('static/polarity_distribution.png')
+
+
 		return render_template('returnquery.html', query=app.vars['query'], 
 			num_of_tweets=app.vars['num_of_tweets'],table=topics.to_html())
 
