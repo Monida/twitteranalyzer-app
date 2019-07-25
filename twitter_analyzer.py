@@ -14,18 +14,22 @@ from nltk.tokenize import TweetTokenizer
 import re
 import matplotlib.pyplot as plt
 
-#%%Set stopwords
+#---------------------------------------------------------------------------------
+#Functions to get the tweets
+#---------------------------------------------------------------------------------
 
+
+#Set stopwords
 nltk.download('stopwords')
 my_stopwords = nltk.corpus.stopwords.words('english')
 
-#query='McDonalds'
-#%%
+#Credentials
 import json
 with open("creds/twitter_credentials.json","r") as file:
     creds=json.load(file)
-    
-#%%Collect tweets
+
+
+#Mine tweets from twitter
 def MineData(apiobj, query, pagestocollect = 10):
 
     results = apiobj.search(q=query, include_entities='true',
@@ -39,8 +43,8 @@ def MineData(apiobj, query, pagestocollect = 10):
     while results['statuses'] and i<pagestocollect: 
         
         if ratelimit < 1: 
-        	#Rate limit time out needs to be added here in order to
-        	#collect data exceeding available rate-limit 
+            #Rate limit time out needs to be added here in order to
+            #collect data exceeding available rate-limit 
             print(str(ratelimit)+'Rate limit!')
             break
         
@@ -60,8 +64,54 @@ def MineData(apiobj, query, pagestocollect = 10):
 
     return data
 
-#%%
-#Extract users, urls and links and putthem in a different column
+def get_tweets(query):  
+    # AUTHENTICATE
+    twitter = Twython(creds['CONSUMER_KEY'], creds['CONSUMER_SECRET'],  
+                        creds['ACCESS_TOKEN'], creds['ACCESS_TOKEN_SECRET'])
+    
+    # Get the tweets
+    dataaccum = MineData(twitter, query,20)
+    
+    #Reformat data as DataFrame format
+    text=[]
+    date=[]
+    location=[]
+    user=[]
+    lang=[]
+    
+    for tweet in dataaccum:
+        text.append(tweet['full_text'])
+        date.append(tweet['created_at'])
+        location.append(tweet['geo'])
+        user.append(tweet['user']['id'])
+        lang.append(tweet['lang'])
+    
+    tweets=pd.DataFrame({'text':text,'date':date,'location':location,'lang':lang})
+    
+    # Remove all entries whose language is different than english
+    tweets=tweets[tweets.lang == 'en']
+    tweets.drop('lang', axis=1, inplace=True)
+    
+    # Revome all duplicates
+    tweets.drop_duplicates(subset='text',keep='first', inplace=True)
+    
+    # Make new columns for new extracted information
+    tweets['links']=tweets['text'].apply(find_urls)
+    tweets['hashtags']=tweets['text'].apply(find_ht)
+    tweets['retweets']=tweets['text'].apply(find_rt)
+    
+    # Remove the tweets that have a retweet or a link
+    for idx, tweet in tweets.iterrows():
+        if tweet.retweets!=[] or tweet.links!=[]:
+            tweets.drop(index=idx, inplace=True)
+            
+    tweets.drop(['links','retweets'], axis=1, inplace=True)
+    return tweets
+
+
+#---------------------------------------------------------------------------------
+# Cleaning functions
+#---------------------------------------------------------------------------------
 def find_user(s):
     return re.findall(r'@[w\w]+', s)
 
@@ -69,7 +119,7 @@ def find_urls(s):
     urls = re.findall(r'(https?:\/\/(\w|\.|\/|\?|\=|\&|\%)*\b)',s)
     return [url[0] for url in urls]
 
-def find_ht(s):#this funciton requires refinement
+def find_ht(s):
     return re.findall(r'#[w\w]+', s)
                   
 def find_spec_char(s):
@@ -78,14 +128,13 @@ def find_spec_char(s):
 def find_rt(s):
     return re.findall(r'RT ?(@[w\w]+)',s)
 
-#%%
 def remove_user(s,replace=' '):
     return re.sub(r'@[w\w]+',replace, s)
 
 def remove_urls(s, replace=' '):
     return re.sub(r'(https|http)?:\/\/(\w|\.|\/|\?|\=|\&|\%)*\b',replace,s)
 
-def remove_ht(s, portion='all',replace= ' '):#this funciton requires refinement
+def remove_ht(s, portion='all',replace= ' '):
     
     if portion=='all': #if want to remove the whole hashtag
         pattern=r'#[w\w]+'
@@ -108,11 +157,14 @@ def remove_numb(s, replace= ''):
 
 def remove_emojis(s, replace = ''):
     pass
-# cleaning master function
-'''
-tweet: a string that contains the text of the tweet
-'''
+
+def spell_checker(s):
+    corr_s = TextBlob(s)
+    return corr_s.correct()
+    
+# Cleaning master function
 def clean_tweet_mtr(tweet, bigrams=False):
+# tweet: a string that contains the text of the tweet
     tweet = remove_user(tweet)
     tweet = remove_urls(tweet)
     tweet = tweet.lower() # lower case
@@ -129,17 +181,17 @@ def clean_tweet_mtr(tweet, bigrams=False):
     tweet = remove_ht(tweet, portion ='hash')
     tweet = remove_spec_char(tweet)
     tweet = remove_double_space(tweet)
-    #tweet = spell_checker(tweet)
+    #tweet = spell_checker(tweet): not ready to be used. It takes to loon to process.
     
     return tweet
 
-def spell_checker(s):
-    corr_s = TextBlob(s)
-    return corr_s.correct()
-    
+#---------------------------------------------------------------------------------
+#NLP functions
+#---------------------------------------------------------------------------------
+
 def assign_topic(token_list,topic_dict,n_highest=1):
-#This function takes a list of tokens and asign them with a topic from a given 
-#dictionary. Returns a list of assigned topic and matching percentage' 
+# This function takes a list of tokens and asign them with a topic from a given 
+# dictionary. Returns a list of assigned topic and matching percentage 
     percentage_match_dict={}
     
     for topic in topic_dict.keys():
@@ -160,13 +212,13 @@ def assign_topic(token_list,topic_dict,n_highest=1):
     
     matching_topics=percentage_match_series.nlargest(n=n_highest,keep='all')
     
-    #From all matching topics, choose the n_highest assignes topic
+    # From all matching topics, choose the nth_highest assigned topic
     assigned_topic=matching_topics.index[n_highest-1]
     match_percentage=matching_topics[n_highest-1]
     
     return [assigned_topic,match_percentage]
 
-#%%Sentiment Analysis
+# Sentiment Analysis
 def polarity(s):
     polarity_val=round(TextBlob(s).sentiment.polarity,2)
     return polarity_val
@@ -193,59 +245,12 @@ def subjectivity_label(s):
     else:
         return 'objective'
 
-#%% 
-def get_tweets(query):  
-    #AUTHENTICATE
-    twitter = Twython(creds['CONSUMER_KEY'], creds['CONSUMER_SECRET'],  
-                        creds['ACCESS_TOKEN'], creds['ACCESS_TOKEN_SECRET'])
-    
-    #%%GET THE TWEETS
-    dataaccum = MineData(twitter, query,20)
-    
-    #%% Reformat data as DataFrame format
-    text=[]
-    date=[]
-    location=[]
-    user=[]
-    lang=[]
-    
-    for tweet in dataaccum:
-        text.append(tweet['full_text'])
-        date.append(tweet['created_at'])
-        location.append(tweet['geo'])
-        user.append(tweet['user']['id'])
-        lang.append(tweet['lang'])
-    
-    tweets=pd.DataFrame({'text':text,'date':date,'location':location,'lang':lang})
-    
-    #Remove all entries whose language is different than english
-    tweets=tweets[tweets.lang == 'en']
-    tweets.drop('lang', axis=1, inplace=True)
-    
-    #Revome all duplicates
-    tweets.drop_duplicates(subset='text',keep='first', inplace=True)
-    
-    
-    #%%
-    #Make new columns for new extracted information
-    tweets['links']=tweets['text'].apply(find_urls)
-    tweets['hashtags']=tweets['text'].apply(find_ht)
-    tweets['retweets']=tweets['text'].apply(find_rt)
-    
-    #Remove the tweets that have a retweet or a link
-    for idx, tweet in tweets.iterrows():
-        if tweet.retweets!=[] or tweet.links!=[]:
-            tweets.drop(index=idx, inplace=True)
-            
-    tweets.drop(['links','retweets'], axis=1, inplace=True)
-    return tweets
-
 
 def clean_and_tokenize(tweets):
-    #Clean and tokenize the tweets
+    # Clean and tokenize the tweets
     tweets['clean_text']=tweets['text'].apply(clean_tweet_mtr)
     
-    #Drop all the tweets that after cleaning are left with an empty string
+    # Drop all the tweets that after cleaning are left with an empty string
     tweets=tweets[tweets.astype(str)['clean_text']!='[]']
     
     tokenizer=TweetTokenizer()
@@ -259,31 +264,30 @@ def clean_and_tokenize(tweets):
 
 
 def manualModelling(tweets):
-    #%%TOPIC MODELING
-    #Manually classify the topic
+    # Manually classify the topic
     topics=pd.read_csv('data/keyword_list.csv',sep=',')
     topics_dict={}
     
     for topic in topics.columns:
         topics_dict[topic]=[word for word in list(topics[topic]) if str(word) !='nan']
     
-     #%%Apply the assign_topic function 
-    #Find highest matching topic
+    # Apply the assign_topic function 
+    # Find highest matching topic
     tweets['topic_1']=tweets['token_text'].apply(assign_topic,
                 args=(topics_dict,1))
     
-    #Find second highest matching topic
+    # Find second highest matching topic
     tweets['topic_2']=tweets['token_text'].apply(assign_topic,
                 args=(topics_dict,2))
     
-    #Make column topic_1 and topic1_precent. Same with topic 2
+    # Make column topic_1 and topic1_precent. Same with topic 2
     tweets['topic_1_percent']=[row[1] for row in tweets['topic_1']]
     tweets['topic_1']=[row[0] for row in tweets['topic_1']]
     
     
     tweets['topic_2_percent']=[row[1] for row in tweets['topic_2']]
     tweets['topic_2']=[row[0] for row in tweets['topic_2']]
-    #%%
+    
     tweets['polarity']=tweets['clean_text'].apply(polarity)
     tweets['polarity_label']=tweets['clean_text'].apply(polarity_label)
     
@@ -292,7 +296,37 @@ def manualModelling(tweets):
     
     return tweets
 
-#%%Functions to analyze the tweets
+# Inspired by: https://ourcodingclub.github.io/2018/12/10/topic-modelling-python.html#apply
+def vectorize_tweets(tweets):
+    from sklearn.feature_extraction.text import CountVectorizer
+    # the vectorizer object will be used to transform text to vector form
+    vectorizer = CountVectorizer(max_df=0.9, min_df=15, token_pattern='\w+|\$[\d\.]+|\S+')
+    
+    # apply transformation
+    words_matrix = vectorizer.fit_transform(tweets['clean_text']).toarray()
+    
+    feature_names = vectorizer.get_feature_names()
+    
+    return {'words_matrix':words_matrix,'feature_names':feature_names}
+
+
+def fit_LDA(words_matrix,number_of_topics=10):    
+
+    from sklearn.decomposition import LatentDirichletAllocation
+    
+    model = LatentDirichletAllocation(n_components=number_of_topics, random_state=0)
+    
+    model.fit(words_matrix)
+    
+    return model
+
+#---------------------------------------------------------------------------------
+# Interpretation functions
+# After performing NLP this function extract meaningful information ready to be
+# interpretable.
+#---------------------------------------------------------------------------------
+
+
 def top_topics(tweets,n=5):
     
     topics=tweets.groupby('topic_1').count()
@@ -307,40 +341,15 @@ def top_topics(tweets,n=5):
     
     return top_topics_list[0:n]
 
+#---------------------------------------------------------------------------------
+# Visualization functions
+#---------------------------------------------------------------------------------
 
 def create_figure(tweets):
     fig = plt.figure()
     plt.hist(tweets['polarity'])
     plt.title('Polarity distribution \n -1 negative - 1 possitive')
     return fig
-
-#Inspired by: https://ourcodingclub.github.io/2018/12/10/topic-modelling-python.html#apply
-
-def vectorize_tweets(tweets):
-    from sklearn.feature_extraction.text import CountVectorizer
-    # the vectorizer object will be used to transform text to vector form
-    vectorizer = CountVectorizer(max_df=0.9, min_df=15, token_pattern='\w+|\$[\d\.]+|\S+')
-    
-    # apply transformation
-    #tf stands for term frecuency
-    words_matrix = vectorizer.fit_transform(tweets['clean_text']).toarray()
-    #The shape of tf tells us how many tweets we have and how many words we have 
-    #that made it through our filtering process.
-    
-    # feature_names tells us what word each column in the matric represents
-    feature_names = vectorizer.get_feature_names()
-    
-    return {'words_matrix':words_matrix,'feature_names':feature_names}
-
-def fit_LDA(words_matrix,number_of_topics=10):    
-
-    from sklearn.decomposition import LatentDirichletAllocation
-    
-    model = LatentDirichletAllocation(n_components=number_of_topics, random_state=0)
-    
-    model.fit(words_matrix)
-    
-    return model
 
 
 def display_topics(model, feature_names, no_top_words):
