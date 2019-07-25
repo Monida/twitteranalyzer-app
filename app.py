@@ -17,6 +17,7 @@ def return_query():
 		app.vars['query']=request.form['query']
 
 		# Send query to analyze
+		import twitter_analyzer
 		tweets=analyze_tweets(app.vars['query'])
 
 		app.vars['num_of_tweets']=len(tweets)
