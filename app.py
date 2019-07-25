@@ -23,7 +23,8 @@ def return_query():
 
 		topics=find_topics(tweets)
 
-		return render_template('returnquery.html', query=app.vars['query'], num_of_tweets=app.vars['num_of_tweets'])
+		return render_template('returnquery.html', query=app.vars['query'], 
+			num_of_tweets=app.vars['num_of_tweets'], something=topics)
 
 def clean_search():
 	app.vars['query']=''
@@ -48,7 +49,7 @@ def find_topics(tweets):
 	#	'Positive%':positives,
 	#	'Neutral%':neutrals,
 	#	'Negative%':negatives})
-	return top_topics
+	return 'Hello'
 
 def tweet_polarity(tweets,topics_list,polarity):
 	polarity_percent=[]
