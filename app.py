@@ -24,7 +24,7 @@ def return_query():
 		topics=find_topics(tweets)
 
 		return render_template('returnquery.html', query=app.vars['query'], 
-			num_of_tweets=app.vars['num_of_tweets'], something=topics)
+			num_of_tweets=app.vars['num_of_tweets'])
 
 def clean_search():
 	app.vars['query']=''
@@ -38,18 +38,19 @@ def analyze_tweets(query):
 	return tweets
 
 def find_topics(tweets):
+	import twitter_analyzer
 	#Identify top topics
-	#top_topics=twitter_analyzer.top_topics(tweets)
-	onetweet=tweets['topic_1'][0]
-	#positives=tweet_polarity(tweets,top_topics,'positive')
-	#neutrals=tweet_polarity(tweets,top_topics,'neutral')
-	#negatives=tweet_polarity(tweets,top_topics,'negative')
+	top_topics=twitter_analyzer.top_topics(tweets)
 
-	#topics=pd.DataFrame({'Topics':top_topics,
-	#	'Positive%':positives,
-	#	'Neutral%':neutrals,
-	#	'Negative%':negatives})
-	return onetweet
+	positives=tweet_polarity(tweets,top_topics,'positive')
+	neutrals=tweet_polarity(tweets,top_topics,'neutral')
+	negatives=tweet_polarity(tweets,top_topics,'negative')
+
+	topics=pd.DataFrame({'Topics':top_topics,
+		'Positive%':positives,
+		'Neutral%':neutrals,
+		'Negative%':negatives})
+	return topics
 
 def tweet_polarity(tweets,topics_list,polarity):
 	polarity_percent=[]
