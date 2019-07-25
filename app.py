@@ -15,13 +15,19 @@ def return_query():
 	if request.method=="POST":
 		app.vars['query']=request.form['query']
 
-		#Analyze tweets
+		# Send query to analyze
+
 
 		return render_template('returnquery.html', query=app.vars['query'])
 
 def clean_search():
 	app.vars['query']=''
 	return None
+
+def analyze_tweets():
+	pass
+	return None
+
 
 if __name__ == '__main__':
 	app.run(debug=True) 
