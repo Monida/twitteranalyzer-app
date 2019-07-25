@@ -39,8 +39,8 @@ def analyze_tweets(query):
 
 def find_topics(tweets):
 	#Identify top topics
-	top_topics=twitter_analyzer.top_topics(tweets)
-
+	#top_topics=twitter_analyzer.top_topics(tweets)
+	onetweet=tweets['topic_1'][0]
 	#positives=tweet_polarity(tweets,top_topics,'positive')
 	#neutrals=tweet_polarity(tweets,top_topics,'neutral')
 	#negatives=tweet_polarity(tweets,top_topics,'negative')
@@ -49,7 +49,7 @@ def find_topics(tweets):
 	#	'Positive%':positives,
 	#	'Neutral%':neutrals,
 	#	'Negative%':negatives})
-	return 'Hello'
+	return onetweet
 
 def tweet_polarity(tweets,topics_list,polarity):
 	polarity_percent=[]
