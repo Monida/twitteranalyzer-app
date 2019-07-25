@@ -2,7 +2,14 @@
 <title>TwitterAnalyzer</title>
 <link rel=stylesheet type=text/css href='{{ url_for('static',filename='style.css')}}'>
 <div class=page>
-  <h1>Was this your word? {{query}}</h1>
+	<section id="resultsummary">
+  		<h1>Search word: {{query}}</h1>
+	</section>
+	<section id="results">
+   		<p>
+  			This are your results...
+  		</p>
+  	</section>
 
 </div>
 </html>
