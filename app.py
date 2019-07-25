@@ -2,16 +2,10 @@ from flask import Flask,render_template, request, redirect
 
 app = Flask(__name__)
 app.vars={}
-app.vars['query']=''
 
-@app.route('/',methods=["GET","POST"])
+@app.route('/')
 def hello_world():
-	if request.method=="GET":
-		return render_template('enterquery.html')
-	if request.method=="POST":
-		if app.vars['query']!='':
-			clean_search()
-		return render_template('enterquery.html')
+	return render_template('enterquery.html')
 
 @app.route('/show_analysis',methods=["GET","POST"])
 def return_query():
