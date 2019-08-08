@@ -13,6 +13,7 @@ import nltk
 from nltk.tokenize import TweetTokenizer
 import re
 import matplotlib.pyplot as plt
+from nltk.corpus import webtext
 
 #---------------------------------------------------------------------------------
 #Functions to get the tweets
@@ -362,7 +363,19 @@ def display_topics(model, feature_names, no_top_words):
                         for i in topic.argsort()[:-no_top_words - 1:-1]]
     return pd.DataFrame(topic_dict)
 
+def create_wordcloud(tweets):
+    nltk.download('webtext')
+    wt_sentences = webtext.sents()
+    return None
 
+def create_LOW(tweets):
+#This function takes all the tweets and create a list of words (LOW)
+    LOW=[]
+    tokenizer=TweetTokenizer()
+    for tweet in tweets['clean_text']:
+        new_token=tokenizer.tokenize(tweet)
+        LOW+=new_token
+    return LOW
 
 
 
