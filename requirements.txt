@@ -6,4 +6,4 @@ numpy
 nltk
 matplotlib
 textblob
-
+wordcloud
