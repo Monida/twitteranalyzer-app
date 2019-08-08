@@ -394,8 +394,9 @@ def create_wordcloud(tokenized_text):
     #Create WordCloud
     wcloud = WordCloud().generate_from_frequencies(fdist)
     fig = plt.figure()
-    #plt.axis("off")
+    plt.axis("off")
     plt.imshow(wcloud,interpolation='bilinear')
+    plt.show()
     return fig
 
 
