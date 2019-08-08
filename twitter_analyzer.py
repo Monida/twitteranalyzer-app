@@ -363,10 +363,20 @@ def display_topics(model, feature_names, no_top_words):
                         for i in topic.argsort()[:-no_top_words - 1:-1]]
     return pd.DataFrame(topic_dict)
 
-def create_wordcloud(tweets):
-    nltk.download('webtext')
-    wt_sentences = webtext.sents()
-    return None
+def create_wordcloud(tokenized_text):
+#This function takes a tokenized text and returns the WordCloud plot
+    #Create frequency distribution from tokenized text
+    fdist = FreqDist(tokenized_text)
+    
+    #Filter frequent words; the words that appear more than 3 times
+    frequent_words = dict([(k,v) for k,v in fdist.items() if len(k)>3])
+    fdist=nltk.FreqDist(frequent_words)
+    
+    #Create WordCloud
+    wcloud = WordCloud().generate_from_frequencies(fdist)
+    fig = plt.figure()
+    plt.imshow(wcloud,interpolation='bilinear')
+    return fig
 
 def create_LOW(tweets):
 #This function takes all the tweets and create a list of words (LOW)
