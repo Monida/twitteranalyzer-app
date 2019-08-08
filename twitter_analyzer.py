@@ -14,6 +14,9 @@ from nltk.tokenize import TweetTokenizer
 import re
 import matplotlib.pyplot as plt
 from nltk.corpus import webtext
+from nltk.probability import FreqDist
+from wordcloud import WordCloud
+
 
 #---------------------------------------------------------------------------------
 #Functions to get the tweets
