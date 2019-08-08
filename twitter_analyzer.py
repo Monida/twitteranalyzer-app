@@ -343,6 +343,22 @@ def top_topics(tweets,n=5):
     
     return top_topics_list[0:n]
 
+
+#---------------------------------------------------------------------------------
+# Auxiliary functions
+#---------------------------------------------------------------------------------
+
+
+def create_LOW(tweets):
+#This function takes all the tweets and create a list of words (LOW)
+    LOW=[]
+    tokenizer=TweetTokenizer()
+    for tweet in tweets['clean_text']:
+        new_token=tokenizer.tokenize(tweet)
+        LOW+=new_token
+    return LOW
+
+
 #---------------------------------------------------------------------------------
 # Visualization functions
 #---------------------------------------------------------------------------------
@@ -378,14 +394,7 @@ def create_wordcloud(tokenized_text):
     plt.imshow(wcloud,interpolation='bilinear')
     return fig
 
-def create_LOW(tweets):
-#This function takes all the tweets and create a list of words (LOW)
-    LOW=[]
-    tokenizer=TweetTokenizer()
-    for tweet in tweets['clean_text']:
-        new_token=tokenizer.tokenize(tweet)
-        LOW+=new_token
-    return LOW
+
 
 
 
