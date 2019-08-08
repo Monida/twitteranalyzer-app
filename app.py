@@ -29,11 +29,10 @@ def return_query():
 		fig.savefig('static/polarity_distribution.png')
 
 		# Plot WordCloud
-		'''
 		LOW=twitter_analyzer.create_LOW(tweets)
 		fig=twitter_analyzer.create_wordcloud(LOW)
 		fig.savefig('static/wordcloud.png')
-		'''
+		
 
 		return render_template('returnquery.html', query=app.vars['query'], 
 			num_of_tweets=app.vars['num_of_tweets'],table=topics.to_html())
