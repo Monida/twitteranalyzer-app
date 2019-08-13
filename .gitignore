@@ -1,4 +1,5 @@
 #Don't track the changes in the following directories
 static/wordcloud.png
 static/polarity_distribution.png
+static/clustergram.png
 creds
