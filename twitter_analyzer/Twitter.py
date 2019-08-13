@@ -211,15 +211,16 @@ class Twitter:
 #Preprocessiong functions
 #---------------------------------------------------------------------------------
 
-    def tokenize_and_stem(stemmer,text):
+    def tokenize_and_stem(self,text):
         #This function takes a cleaned text, then tokenizes it and stemms it to
-        #retrieve a list of stemmed tokens
+        #retrieve a list of stemmed tokens        
+        stemmer=SnowballStemmer('english')
         tokens = [word for sent in nltk.sent_tokenize(text) for
         word in nltk.word_tokenize(sent)]
         stems = [stemmer.stem(t) for t in tokens]
         return stems
 
-    def tokenize_only(text):
+    def tokenize_only(self,text):
         #This function takes a cleaned text, then tokenizes to
         #retrieve a list of tokens
         tokens = [word for sent in nltk.sent_tokenize(text) for
@@ -365,11 +366,10 @@ class Twitter:
         for i in range(1,len(tweets_list)+1):
             ranks.append(i)
         # Proprocessing and TF-IDF feature engineering
-        stemmer=SnowballStemmer('english')
 
         tfidf_vectorizer = TfidfVectorizer(max_df=0.9, max_features=200000,
                                            min_df=10, stop_words='english',
-                                           use_idf=True, tokenizer=tokenize_and_stem, 
+                                           use_idf=True, tokenizer=self.tokenize_and_stem, 
                                            ngram_range=(1,3))
      
         self.tfidf_matrix = tfidf_vectorizer.fit_transform(tweets_list)
@@ -383,9 +383,9 @@ class Twitter:
         km.fit(self.tfidf_matrix)
 
         # final clusters
-        clusters = km.labels_.tolist()
-        tweets_data = { 'rank': ranks, 'complaints': tweets_list,'cluster': clusters }
-        clusters_df = pd.DataFrame(tweets_data, index = [clusters],columns = ['rank', 'cluster'])
+        self.clusters = km.labels_.tolist()
+        tweets_data = { 'rank': ranks, 'complaints': tweets_list,'cluster': self.clusters }
+        clusters_df = pd.DataFrame(tweets_data, index = [self.clusters],columns = ['rank', 'cluster'])
         clusters_df['cluster'].value_counts()
         return clusters_df
 
@@ -486,7 +486,7 @@ class Twitter:
         
         # Plot clustergram
         # Create data frame that has the result of the MDS and the cluster
-        df = pd.DataFrame(dict(x=xs, y=ys, label=clusters))
+        df = pd.DataFrame(dict(x=xs, y=ys, label=self.clusters))
         groups = df.groupby('label')
         # Set up plot
         fig, ax = plt.subplots(figsize=(17, 9)) # set size
@@ -508,7 +508,7 @@ class Twitter:
                            top='off',
                            labelleft='off')
             ax.legend(numpoints=1)
-        plt.show()
+        #plt.show()
         return fig
 
 
