@@ -1,2 +1,5 @@
 # twitteranalyzer-app
-This app will help you to discover what people are talking about given a specific query.
+This repository contains all the files of the Web-app TwitterAnalyzer, which you can try out on this link: https://twitteranalyzer-app.herokuapp.com/
+
+
+
