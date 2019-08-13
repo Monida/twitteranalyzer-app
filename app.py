@@ -17,29 +17,33 @@ def return_query():
         return redirect('/')
     
     if request.method=="POST":
-        app.vars['query']=request.form['query']
-        
-        # Analyze tweets
-        twitter=Twitter(app.vars['query'])
-        tweets=twitter.get_tweets()
-        tweets=twitter.clean_and_tokenize()
-        tweets=twitter.manualModelling()
-        
-        app.vars['num_of_tweets']=len(tweets)
-        
-        topics=find_topics(twitter)
-        
-        # Plot polarity
-        fig=twitter.create_figure()
-        fig.savefig('static/polarity_distribution.png')
-        
-        # Plot WordCloud
-        LOW=twitter.create_LOW()
-        fig=twitter.create_wordcloud(LOW)
-        fig.savefig('static/wordcloud.png')
-        
-        return render_template('returnquery.html', query=app.vars['query'], 
-			num_of_tweets=app.vars['num_of_tweets'],table=topics.to_html())
+    	if request.form['query']=='':
+    		clean_search()
+    		return redirect('/')
+    	else:
+	        app.vars['query']=request.form['query']
+	        
+	        # Analyze tweets
+	        twitter=Twitter(app.vars['query'])
+	        tweets=twitter.get_tweets()
+	        tweets=twitter.clean_and_tokenize()
+	        tweets=twitter.manualModelling()
+	        
+	        app.vars['num_of_tweets']=len(tweets)
+	        
+	        topics=find_topics(twitter)
+	        
+	        # Plot polarity
+	        fig=twitter.create_figure()
+	        fig.savefig('static/polarity_distribution.png')
+	        
+	        # Plot WordCloud
+	        LOW=twitter.create_LOW()
+	        fig=twitter.create_wordcloud(LOW)
+	        fig.savefig('static/wordcloud.png')
+	        
+	        return render_template('returnquery.html', query=app.vars['query'], 
+				num_of_tweets=app.vars['num_of_tweets'],table=topics.to_html())
 
 def clean_search():
 	app.vars['query']=''
