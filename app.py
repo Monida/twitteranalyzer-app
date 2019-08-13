@@ -30,11 +30,11 @@ def return_query():
         topics=find_topics(twitter)
         
         # Plot polarity
-        fig=twitter.create_figure(tweets)
+        fig=twitter.create_figure()
         fig.savefig('static/polarity_distribution.png')
         
         # Plot WordCloud
-        LOW=twitter.create_LOW(tweets)
+        LOW=twitter.create_LOW()
         fig=twitter.create_wordcloud(LOW)
         fig.savefig('static/wordcloud.png')
         
