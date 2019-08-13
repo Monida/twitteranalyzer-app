@@ -18,11 +18,16 @@ from nltk.probability import FreqDist
 from wordcloud import WordCloud
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.decomposition import LatentDirichletAllocation
+from nltk.stem.snowball import SnowballStemmer
+from sklearn.metrics.pairwise import cosine_similarity
+from sklearn.manifold import MDS
+from sklearn.cluster import KMeans
+from sklearn.feature_extraction.text import TfidfVectorizer
 
 
 
 #---------------------------------------------------------------------------------
-#Functions to get the tweets
+# Functions to get the tweets
 #---------------------------------------------------------------------------------
 
 class Twitter:
@@ -203,6 +208,26 @@ class Twitter:
         return tweet
 
 #---------------------------------------------------------------------------------
+#Preprocessiong functions
+#---------------------------------------------------------------------------------
+
+    def tokenize_and_stem(stemmer,text):
+        #This function takes a cleaned text, then tokenizes it and stemms it to
+        #retrieve a list of stemmed tokens
+        tokens = [word for sent in nltk.sent_tokenize(text) for
+        word in nltk.word_tokenize(sent)]
+        stems = [stemmer.stem(t) for t in tokens]
+        return stems
+
+    def tokenize_only(text):
+        #This function takes a cleaned text, then tokenizes to
+        #retrieve a list of tokens
+        tokens = [word for sent in nltk.sent_tokenize(text) for
+        word in nltk.word_tokenize(sent)]
+        return tokens
+
+
+#---------------------------------------------------------------------------------
 #NLP functions
 #---------------------------------------------------------------------------------
 
@@ -333,6 +358,37 @@ class Twitter:
         model.fit(words_matrix)
         
         return model
+
+    def cluster_text(self):
+        tweets_list=self.tweets['clean_text'].tolist()
+        ranks=[]
+        for i in range(1,len(tweets_list)+1):
+            ranks.append(i)
+        # Proprocessing and TF-IDF feature engineering
+        stemmer=SnowballStemmer('english')
+
+        tfidf_vectorizer = TfidfVectorizer(max_df=0.9, max_features=200000,
+                                           min_df=10, stop_words='english',
+                                           use_idf=True, tokenizer=tokenize_and_stem, 
+                                           ngram_range=(1,3))
+     
+        self.tfidf_matrix = tfidf_vectorizer.fit_transform(tweets_list)
+       
+        terms = tfidf_vectorizer.get_feature_names()
+
+        # Clustering using K-means
+        num_clusters = 5
+
+        km = KMeans(n_clusters=num_clusters)
+        km.fit(self.tfidf_matrix)
+
+        # final clusters
+        clusters = km.labels_.tolist()
+        tweets_data = { 'rank': ranks, 'complaints': tweets_list,'cluster': clusters }
+        clusters_df = pd.DataFrame(tweets_data, index = [clusters],columns = ['rank', 'cluster'])
+        clusters_df['cluster'].value_counts()
+        return clusters_df
+
     
 #---------------------------------------------------------------------------------
 # Interpretation functions
@@ -407,6 +463,56 @@ class Twitter:
         plt.imshow(wcloud,interpolation='bilinear')
         #plt.show()
         return fig
+
+    # Inspired by Natural Language Process Recipes, Akshay Kulkarni & Adarsha Shivananda, 2019.
+    def create_clustergram(self):
+        similarity_distance = 1 - cosine_similarity(self.tfidf_matrix)
+        # Convert two components as we're plotting points in a two-dimensional plane
+        mds = MDS(n_components=2, dissimilarity="precomputed",random_state=1)
+        pos = mds.fit_transform(similarity_distance)
+        #Shape (n_components, n_samples)
+        xs, ys = pos[:, 0], pos[:, 1]
+        #Set up colors per clusters using a dict
+
+        cluster_colors = {0: '#DBF4AD', 1: '#A9E190', 2: '#CDC776',
+                          3: '#A5AA52', 4: '#818D92'}
+        
+        #Set up cluster names using a dict. Later change it by authomatic topic modelling
+        cluster_names = {0: 'Service',
+                         1: 'Good food quality',
+                         2: 'Bad good quality',
+                         3: 'Eco friendly',
+                         4: 'Broken ice cream machine'}
+        
+        # Plot clustergram
+        # Create data frame that has the result of the MDS and the cluster
+        df = pd.DataFrame(dict(x=xs, y=ys, label=clusters))
+        groups = df.groupby('label')
+        # Set up plot
+        fig, ax = plt.subplots(figsize=(17, 9)) # set size
+        for name, group in groups:
+            ax.plot(group.x, group.y, marker='o', linestyle='', ms=20,
+                label=cluster_names[name], color=cluster_colors[name],
+                mec='none')
+            ax.set_aspect('auto')
+            ax.tick_params(\
+                           axis= 'x',
+                           which='both',
+                           bottom='off',
+                           top='off',
+                           labelbottom='off')
+            ax.tick_params(\
+                           axis= 'y',
+                           which='both',
+                           left='off',
+                           top='off',
+                           labelleft='off')
+            ax.legend(numpoints=1)
+        plt.show()
+        return fig
+
+
+
 
 
     
