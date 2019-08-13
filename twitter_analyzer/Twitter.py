@@ -405,7 +405,7 @@ class Twitter:
         fig = plt.figure()
         plt.axis("off")
         plt.imshow(wcloud,interpolation='bilinear')
-        plt.show()
+        #plt.show()
         return fig
 
 
