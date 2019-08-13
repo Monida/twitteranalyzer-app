@@ -26,6 +26,10 @@ def return_query():
 	        # Analyze tweets
 	        twitter=Twitter(app.vars['query'])
 	        tweets=twitter.get_tweets()
+
+	        #Check for empty data frame
+	        if tweets.empty ==True:
+	        	return redirect('/error')
 	        tweets=twitter.clean_and_tokenize()
 	        tweets=twitter.manualModelling()
 	        
@@ -41,12 +45,25 @@ def return_query():
 	        LOW=twitter.create_LOW()
 	        fig=twitter.create_wordcloud(LOW)
 	        fig.savefig('static/wordcloud.png')
+
+	        # Plot clustergram
+	        clusters_data=twitter.cluster_text()
+	        fig=twitter.create_clustergram()
+	        fig.savefig('static/clustergram.png')
+
 	        
 	        return render_template('returnquery.html', query=app.vars['query'], 
 				num_of_tweets=app.vars['num_of_tweets'],table=topics.to_html())
 
+@app.route('/error',methods=["GET","POST"])
+def error():
+	if request.method=="POST":
+		return redirect('/')
+	else:
+		return render_template('error.html')
+
 def clean_search():
-	app.vars['query']=''
+	app.vars={}
 	return None
 
 def find_topics(twitter):
