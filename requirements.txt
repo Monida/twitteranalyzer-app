@@ -7,3 +7,4 @@ nltk
 matplotlib
 textblob
 wordcloud
+sklearn
