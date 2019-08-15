@@ -213,7 +213,8 @@ class Twitter:
 
     def tokenize_and_stem(self,text):
         #This function takes a cleaned text, then tokenizes it and stemms it to
-        #retrieve a list of stemmed tokens        
+        #retrieve a list of stemmed tokens
+        nltk.download('punkt')        
         stemmer=SnowballStemmer('english')
         tokens = [word for sent in nltk.sent_tokenize(text) for
         word in nltk.word_tokenize(sent)]
