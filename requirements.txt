@@ -8,3 +8,4 @@ matplotlib
 textblob
 wordcloud
 sklearn
+rq
