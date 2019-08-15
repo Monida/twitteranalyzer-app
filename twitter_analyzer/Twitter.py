@@ -23,7 +23,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.manifold import MDS
 from sklearn.cluster import KMeans
 from sklearn.feature_extraction.text import TfidfVectorizer
-#nltk.download('punkt')     
+nltk.download('punkt')     
 
 
 #---------------------------------------------------------------------------------
