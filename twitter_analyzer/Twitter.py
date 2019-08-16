@@ -50,9 +50,9 @@ class Twitter:
         return creds
 
 
-    def get_punkt()
+    def get_punkt(self):
         nltk.download('punkt')
-        return none
+        return None
 
 
     #Mine tweets from twitter
@@ -219,7 +219,7 @@ class Twitter:
         #This function takes a cleaned text, then tokenizes it and stemms it to
         #retrieve a list of stemmed tokens
 
-        get_punkt()
+        #get_punkt()
 
         stemmer=SnowballStemmer('english')
         tokens = [word for sent in nltk.sent_tokenize(text) for
