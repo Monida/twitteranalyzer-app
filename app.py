@@ -16,7 +16,7 @@ app.vars={}
 
 @app.route('/')
 def enter_query():
-	clean_search()
+	#clean_search()
 	return render_template('enterquery.html')
 
 @app.route('/show_analysis',methods=["GET","POST"])
