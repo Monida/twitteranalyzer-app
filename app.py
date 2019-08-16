@@ -1,14 +1,14 @@
 from flask import Flask,render_template, request, redirect
 import pandas as pd
 from twitter_analyzer.Twitter import Twitter
-from rq import Queue
-from worker import conn
+#from rq import Queue
+#from worker import conn
 
 
-q= Queue(connection = conn)
+#q= Queue(connection = conn)
 
-twitter= Twitter()
-results = q.enqueue(twitter.get_punkt())
+#twitter_helper= Twitter()
+#results = q.enqueue(twitter_helper.get_punkt())
 
 
 app = Flask(__name__)
