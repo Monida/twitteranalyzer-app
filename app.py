@@ -73,6 +73,7 @@ def error():
 
 def clean_search():
 	app.vars={}
+	del twitter
 	return None
 
 def find_topics(twitter):
