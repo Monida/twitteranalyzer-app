@@ -38,7 +38,7 @@ class Twitter:
     
     def get_stop_words(self):
         #Set stopwords
-        nltk.download('stopwords')
+        #nltk.download('stopwords')
         my_stopwords = nltk.corpus.stopwords.words('english')
         return my_stopwords
     
