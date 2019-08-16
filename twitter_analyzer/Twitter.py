@@ -50,6 +50,11 @@ class Twitter:
         return creds
 
 
+    def get_punkt()
+        nltk.download('punkt')
+        return none
+
+
     #Mine tweets from twitter
     def MineData(self,apiobj, pagestocollect = 10):
     
@@ -213,6 +218,8 @@ class Twitter:
     def tokenize_and_stem(self,text):
         #This function takes a cleaned text, then tokenizes it and stemms it to
         #retrieve a list of stemmed tokens
+
+        get_punkt()
 
         stemmer=SnowballStemmer('english')
         tokens = [word for sent in nltk.sent_tokenize(text) for
