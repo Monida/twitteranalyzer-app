@@ -25,7 +25,8 @@ from sklearn.manifold import MDS
 from sklearn.cluster import KMeans
 from sklearn.feature_extraction.text import TfidfVectorizer
 from matplotlib.ticker import FuncFormatter
-
+import base64
+import io
 
 #---------------------------------------------------------------------------------
 # Functions to get the tweets
@@ -276,9 +277,9 @@ class Twitter:
         polarity_val=round(TextBlob(s).sentiment.polarity,2)
         return polarity_val
             
-    def subjectivity(self,s):
-        subjectivity_val=round(TextBlob(s).sentiment.subjectivity,2)
-        return subjectivity_val
+    def objectivity(self,s):
+        objectivity_val=round(TextBlob(s).sentiment.subjectivity,2)
+        return objectivity_val
     
     def polarity_label(self, s):
         polarity_val=round(TextBlob(s).sentiment.polarity,2)
@@ -289,14 +290,14 @@ class Twitter:
         else:
             return 'Positive'
             
-    def subjectivity_label(self, s):
-        subjectivity_val=round(TextBlob(s).sentiment.subjectivity,2)
-        if subjectivity_val <= 0.4:
-            return 'subjective'
-        elif (subjectivity_val > 0.4 and subjectivity_val <= 0.6):
-            return 'neutral'
+    def objectivity_label(self, s):
+        objectivity_val=round(TextBlob(s).sentiment.subjectivity,2)
+        if objectivity_val <= 0.4:
+            return 'Subjective'
+        elif (objectivity_val > 0.4 and objectivity_val <= 0.6):
+            return 'Neutral'
         else:
-            return 'objective'
+            return 'Objective'
     
     
     def clean_and_tokenize(self):
@@ -344,8 +345,8 @@ class Twitter:
         self.tweets['polarity']=self.tweets['clean_text'].apply(self.polarity)
         self.tweets['polarity_label']=self.tweets['clean_text'].apply(self.polarity_label)
         
-        self.tweets['subjectivity']=self.tweets['clean_text'].apply(self.subjectivity)
-        self.tweets['subjectivity_label']=self.tweets['clean_text'].apply(self.subjectivity_label)
+        self.tweets['objectivity']=self.tweets['clean_text'].apply(self.objectivity)
+        self.tweets['objectivity_label']=self.tweets['clean_text'].apply(self.objectivity_label)
         
         return self.tweets
 
@@ -436,11 +437,12 @@ class Twitter:
     #---------------------------------------------------------------------------------
     
     
-    def create_LOW(self):
+    def create_LOW(self,topic):
     #This function takes all the tweets and create a list of words (LOW)
         LOW=[]
         tokenizer=TweetTokenizer()
-        for tweet in self.tweets['clean_text']:
+        filtered_tweets=self.tweets[self.tweets['topic_1']==topic]
+        for tweet in filtered_tweets['clean_text']:
             new_token=tokenizer.tokenize(tweet)
             LOW+=new_token
         return LOW
@@ -449,7 +451,11 @@ class Twitter:
 # Visualization functions
 #---------------------------------------------------------------------------------
 
-    def polarity_plot(self):
+    def polarity_plot(self,topic):
+    # Figure returning inpired by:
+    # https://technovechno.com/creating-graphs-in-python-using-matplotlib-flask-framework-pythonanywhere/
+
+        polarities=self.tweets[self.tweets['topic_1']==topic]
 
         polarities=self.tweets.groupby('polarity_label').count()
 
@@ -459,9 +465,46 @@ class Twitter:
 
         polarities['polarity_label']=polarities.index
 
+        img=io.BytesIO()
+        
         x = np.arange(3)
         values = polarities['count'].values
         labels = list(polarities['polarity_label'])
+
+        def percentages(x,pos):
+            return '%d' % (x/10) + '%'
+
+        formatter = FuncFormatter(percentages)
+        
+        fig, ax = plt.subplots()
+        ax.yaxis.set_major_formatter(formatter)
+        plt.bar(x, values)
+        plt.xticks(x, labels)
+        plt.savefig(img,format='png')
+        img.seek(0)
+        figure_url=base64.b64encode(img.getvalue()).decode()
+        plt.close()
+
+        return 'data:image/png;base64,{}'.format(figure_url)
+
+
+    def objectivity_plot(self,topic):
+
+        objectivities=self.tweets[self.tweets['topic_1']==topic]
+
+        objectivities=self.tweets.groupby('objectivity_label').count()
+
+        objectivities=objectivities.rename(columns = {'text':'count'})
+
+        objectivities=pd.DataFrame(objectivities['count'])
+
+        objectivities['objectivity_label']=objectivities.index
+
+        img = io.BytesIO()
+
+        x = np.arange(3)
+        values = objectivities['count'].values
+        labels = list(objectivities['objectivity_label'])
 
         def percentages(x,pos):
             return '%d' % (x/10) + '%'
@@ -472,8 +515,12 @@ class Twitter:
         ax.yaxis.set_major_formatter(formatter)
         plt.bar(x, values)
         plt.xticks(x, labels)
+        plt.savefig(img,format='png')
+        img.seek(0)
+        figure_url=base64.b64encode(img.getvalue()).decode()
+        plt.close()
 
-        return fig
+        return 'data:image/png;base64,{}'.format(figure_url)
     
     
     def display_topics(self, model, feature_names, no_top_words):
@@ -496,10 +543,15 @@ class Twitter:
         
         #Create WordCloud
         wcloud = WordCloud().generate_from_frequencies(fdist)
+        img=io.BytesIO()
         fig = plt.figure()
         plt.axis("off")
         plt.imshow(wcloud,interpolation='bilinear')
-        return fig
+        plt.savefig(img,format='png')
+        img.seek(0)
+        figure_url = base64.b64encode(img.getvalue()).decode()
+        plt.close()
+        return 'data:image/png;base64,{}'.format(figure_url)
 
     # Inspired by Natural Language Process Recipes, Akshay Kulkarni & Adarsha Shivananda, 2019.
     def create_clustergram(self,top_topics):

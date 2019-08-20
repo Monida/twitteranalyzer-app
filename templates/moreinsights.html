@@ -10,12 +10,17 @@
   		</p>
       <p>
         <h2>Most frequent words</h2>
-        <img src="static/wordcloud.png" width="500"/>
+        <img src="{{wordcloud}}" width="500"/>
       </p>
-  		<p>
-  			<h2>General polarity distribution</h2>
-  			<img src="static/polarity_distribution.png" width="500"/>
-  		</p>	
+      <p>
+        <h2>General polarity</h2>
+        <img src="{{polarity}}" width="500"/>
+      </p>  
+      <p>
+        <h2>General objectivity</h2>
+        <img src="{{objectivity}}" width="500"/>
+      </p>  
+
   		<form id="moreinsightsform" method="GET" action="show_analysis">
   			<input type="submit" id="back" value="back">
   		</form>

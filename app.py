@@ -1,6 +1,8 @@
 from flask import Flask,render_template, request, redirect
 import pandas as pd
 from twitter_analyzer.Twitter import Twitter
+import os
+import base64
 #from rq import Queue
 #from worker import conn
 
@@ -80,18 +82,19 @@ def more_insights():
 		tweets_per_topic = twitter.topics['Count'][4]
 		selected_topic = twitter.topics.index[4]
 
+	# Plot WordCloud
+	LOW = twitter.create_LOW(selected_topic)
+	fig1 = twitter.create_wordcloud(LOW)
 
 	# Plot polarity
-	fig=twitter.polarity_plot()
-	fig.savefig('static/polarity_distribution.png')
+	fig2 = twitter.polarity_plot(selected_topic)
 
-	# Plot WordCloud
-	LOW=twitter.create_LOW()
-	fig=twitter.create_wordcloud(LOW)
-	fig.savefig('static/wordcloud.png')
+	# Plot objectivity
+	fig3 = twitter.objectivity_plot(selected_topic)
 
 	return render_template('moreinsights.html',num_of_tweets=app.vars['num_of_tweets'], 
-		num_of_tweets_per_topic=tweets_per_topic, topic=selected_topic)
+		num_of_tweets_per_topic=tweets_per_topic, topic=selected_topic,wordcloud=fig1,
+		polarity=fig2, objectivity=fig3)
 
 @app.route('/error',methods=["GET","POST"])
 def error():

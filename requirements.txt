@@ -9,3 +9,6 @@ textblob
 wordcloud
 sklearn
 rq
+os
+io
+base64
