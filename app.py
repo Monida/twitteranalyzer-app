@@ -15,7 +15,7 @@ app = Flask(__name__)
 app.vars={}
 twitter=Twitter('')
 
-@app.route('/home',methods=["GET","POST"])
+@app.route('/',methods=["GET","POST"])
 def enter_query():
 	if request.method=="GET":
 		return render_template('enterquery.html')
@@ -31,7 +31,7 @@ def return_query():
     
     if request.method=="POST":
     	if request.form['query']=='':
-    		return redirect('/home')
+    		return redirect('/')
     	else:
 	        app.vars['query']=request.form['query']
 	        
@@ -97,7 +97,7 @@ def more_insights():
 def error():
 	if request.method=="POST":
 		clean_search()
-		return redirect('/home')
+		return redirect('/')
 	else:
 		return render_template('error.html')
 
