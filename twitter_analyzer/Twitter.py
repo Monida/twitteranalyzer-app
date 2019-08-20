@@ -579,6 +579,7 @@ class Twitter:
         df = pd.DataFrame(dict(x=xs, y=ys, label=self.clusters))
         groups = df.groupby('label')
         # Set up plot
+        img = io.BytesIO()
         fig, ax = plt.subplots(figsize=(17, 9)) # set size
         for name, group in groups:
             ax.plot(group.x, group.y, marker='o', linestyle='', ms=20,
@@ -598,8 +599,10 @@ class Twitter:
                            top='off',
                            labelleft='off')
             ax.legend(numpoints=1)
-        #plt.show()
-        return fig
+        plt.savefig(img,format='png')
+        img.seek(0)
+        figure_url = base64.b64encode(img.getvalue()).decode()
+        return 'data:image/png;base64,{}'.format(figure_url)
 
 
 

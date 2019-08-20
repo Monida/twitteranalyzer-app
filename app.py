@@ -54,12 +54,10 @@ def return_query():
 
 	        # Plot clustergram
 	        clusters_data=twitter.cluster_text()
-	        #fig=twitter.create_clustergram(twitter.topics)
-	        #fig.savefig('static/clustergram.png')
-
+	        fig=twitter.create_clustergram(twitter.topics)
 	        
 	        return render_template('returnquery.html', query=app.vars['query'], 
-				num_of_tweets=app.vars['num_of_tweets'],table=twitter.topics.to_html())
+				num_of_tweets=app.vars['num_of_tweets'],table=twitter.topics.to_html(), clustergram=fig)
 
 
 @app.route('/moreinsights',methods=["POST"])
