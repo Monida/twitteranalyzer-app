@@ -9,30 +9,42 @@
   		</p>
 	</section>
 	<section id="results">
-   		<p>
-  			{{something}}
-  		</p>
   		<p>
   			<h2>Top topics</h2><br>
-  			{{table|safe}} <br>
+  			<table>
+          <tr>
+            <td>
+            {{table|safe}} 
+            </td>
+            <td>
+            <form id="moreinsights" method="POST" action="moreinsights">
+              <table>
+                <tr><th>More insightes</th></tr>
+                <tr><td><input type="submit" name="insights_topic1" value=""></td></tr>
+                <tr><td><input type="submit" name="insights_topic2" value=""></td></tr>
+                <tr><td><input type="submit" name="insights_topic3" value=""></td></tr>
+                <tr><td><input type="submit" name="insights_topic4" value=""></td></tr>
+                <tr><td><input type="submit" name="insights_topic5" value=""></td></tr>               
+              </table>
+
+            </form>
+            </td>
+          </tr>
+
+
+        </table>
+
+        <br>
   			<br>
   		</p>
       <p>
         <h2>Topic clustering</h2>
         <img src="static/clustergram.png" width="500"/>
       </p>
-  		<p>
-  			<h2>General polarity distribution</h2>
-  			<img src="static/polarity_distribution.png" width="500"/>
-  		</p>
-      <p>
-        <h2>Most frequent words</h2>
-        <img src="static/wordcloud.png" width="500"/>
-      </p>
-  		
+
   	</section>
   	<section id="returnresults">
-  		<form id="returnresultsform">
+  		<form id="returnresultsform" method="POST" action="home">
   			<input type="submit" id="new_search" value="New Search">
   		</form>
   	</section>

@@ -8,6 +8,7 @@ https://ourcodingclub.github.io/2018/12/10/topic-modelling-python.html#top_mod
 #%%
 from twython import Twython
 import pandas as pd
+import numpy as np
 from textblob import TextBlob
 import nltk
 from nltk.tokenize import TweetTokenizer
@@ -35,6 +36,7 @@ class Twitter:
         self.tweets=pd.DataFrame()
         self.creds=self.get_creds()
         self.my_stopwords=self.get_stop_words()
+        self.topics=pd.DataFrame()
     
     def get_stop_words(self):
         #Set stopwords
@@ -404,20 +406,28 @@ class Twitter:
 #---------------------------------------------------------------------------------
 
     
-    def top_topics(self,n=5):
+    def top_topics(self, n=5):
         #Tweets: the tweets dataframe 
         #n: top n topics
-        topics=self.tweets.groupby('topic_1').count()
+        self.topics=self.tweets.groupby('topic_1').count()
     
-        topics=topics.rename(columns = {'text':'count'})
+        self.topics=self.topics.rename(columns = {'text':'Count'})
         
-        topics=topics['count']
+        self.topics=pd.DataFrame(self.topics['Count'])
+
+        total=sum(self.topics.values)[0]
+
+        self.topics['Percentage']=round(self.topics['Count']/total*100,1)
+
+        self.topics['Percentage']=self.topics['Percentage'].apply(lambda p: str(p)+'%')
+
+        self.topics=self.topics.sort_values(by='Count', ascending=False)
         
-        topics=topics.sort_values(ascending=False)
+        self.topics=self.topics.iloc[0:5]
+
+        del self.topics.index.name
         
-        top_topics_list=topics[0:n].index.tolist()
-        
-        return top_topics_list[0:n]
+        return self.topics
     
     
     #---------------------------------------------------------------------------------
@@ -438,10 +448,24 @@ class Twitter:
 # Visualization functions
 #---------------------------------------------------------------------------------
 
-    def create_figure(self):
-        fig = plt.figure()
-        plt.hist(self.tweets['polarity'])
-        plt.title('Polarity distribution \n -1 negative - 1 possitive')
+    def polarity_plot(self):
+
+        polarities=self.tweets.groupby('polarity_label').count()
+
+        polarities=polarities.rename(columns = {'text':'count'})
+
+        polarities=pd.DataFrame(polarities['count'])
+
+        polarities['polarity_label']=polarities.index
+
+        x = np.arange(3)
+        values = polarities['count'].values
+        labels = list(polarities['polarity_label'])
+
+        fig, ax = plt.subplots()
+        plt.bar(x, values)
+        plt.xticks(x, labels)
+
         return fig
     
     
@@ -468,11 +492,10 @@ class Twitter:
         fig = plt.figure()
         plt.axis("off")
         plt.imshow(wcloud,interpolation='bilinear')
-        #plt.show()
         return fig
 
     # Inspired by Natural Language Process Recipes, Akshay Kulkarni & Adarsha Shivananda, 2019.
-    def create_clustergram(self):
+    def create_clustergram(self,top_topics):
         similarity_distance = 1 - cosine_similarity(self.tfidf_matrix)
         # Convert two components as we're plotting points in a two-dimensional plane
         mds = MDS(n_components=2, dissimilarity="precomputed",random_state=1)
@@ -485,11 +508,12 @@ class Twitter:
                           3: '#A5AA52', 4: '#818D92'}
         
         #Set up cluster names using a dict. Later change it by authomatic topic modelling
-        cluster_names = {0: 'Service',
-                         1: 'Good food quality',
-                         2: 'Bad good quality',
-                         3: 'Eco friendly',
-                         4: 'Broken ice cream machine'}
+
+        cluster_names = {0: list(top_topics.index)[0],
+                         1: list(top_topics.index)[1],
+                         2: list(top_topics.index)[2],
+                         3: list(top_topics.index)[3],
+                         4: list(top_topics.index)[4]}
         
         # Plot clustergram
         # Create data frame that has the result of the MDS and the cluster

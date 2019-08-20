@@ -13,27 +13,30 @@ from twitter_analyzer.Twitter import Twitter
 
 app = Flask(__name__)
 app.vars={}
+twitter=Twitter('')
 
-@app.route('/')
+@app.route('/home',methods=["GET","POST"])
 def enter_query():
-	#clean_search()
-	return render_template('enterquery.html')
+	if request.method=="GET":
+		return render_template('enterquery.html')
+	else:
+		clean_search()
+		return render_template('enterquery.html')
 
 @app.route('/show_analysis',methods=["GET","POST"])
 def return_query():
     if request.method=="GET":
-        clean_search()
-        return redirect('/')
+        return render_template('returnquery.html', query=app.vars['query'], 
+				num_of_tweets=app.vars['num_of_tweets'],table=twitter.topics.to_html())
     
     if request.method=="POST":
     	if request.form['query']=='':
-    		clean_search()
-    		return redirect('/')
+    		return redirect('/home')
     	else:
 	        app.vars['query']=request.form['query']
 	        
 	        # Analyze tweets
-	        twitter=Twitter(app.vars['query'])
+	        twitter.query=app.vars['query']
 	        tweets=twitter.get_tweets()
 
 	        #Check for empty data frame
@@ -44,53 +47,59 @@ def return_query():
 	        
 	        app.vars['num_of_tweets']=len(tweets)
 	        
-	        topics=find_topics(twitter)
-	        
-	        # Plot polarity
-	        fig=twitter.create_figure()
-	        fig.savefig('static/polarity_distribution.png')
-	        
-	        # Plot WordCloud
-	        LOW=twitter.create_LOW()
-	        fig=twitter.create_wordcloud(LOW)
-	        fig.savefig('static/wordcloud.png')
+	        #topics=twitter.top_topics(tweets)
+	        twitter.top_topics(tweets)
 
 	        # Plot clustergram
 	        clusters_data=twitter.cluster_text()
-	        fig=twitter.create_clustergram()
-	        fig.savefig('static/clustergram.png')
+	        #fig=twitter.create_clustergram(twitter.topics)
+	        #fig.savefig('static/clustergram.png')
 
 	        
 	        return render_template('returnquery.html', query=app.vars['query'], 
-				num_of_tweets=app.vars['num_of_tweets'],table=topics.to_html())
+				num_of_tweets=app.vars['num_of_tweets'],table=twitter.topics.to_html())
+
+
+@app.route('/moreinsights',methods=["POST"])
+def more_insights():
+
+    # Plot polarity
+    fig=twitter.polarity_plot()
+    fig.savefig('static/polarity_distribution.png')
+    
+    # Plot WordCloud
+    LOW=twitter.create_LOW()
+    fig=twitter.create_wordcloud(LOW)
+    fig.savefig('static/wordcloud.png')
+
+    return render_template('moreinsights.html',num_of_tweets=app.vars['num_of_tweets'])
 
 @app.route('/error',methods=["GET","POST"])
 def error():
 	if request.method=="POST":
-		return redirect('/')
+		clean_search()
+		return redirect('/home')
 	else:
 		return render_template('error.html')
 
 def clean_search():
 	app.vars={}
-	del twitter
 	return None
 
-def find_topics(twitter):
-	#Identify top topics
-	top_topics=twitter.top_topics()
-
+def find_polarities():
 	positives=tweet_polarity(twitter,top_topics,'positive')
 	neutrals=tweet_polarity(twitter,top_topics,'neutral')
 	negatives=tweet_polarity(twitter,top_topics,'negative')
+	return None 
+
+
+def tweet_polarity(twitter,topics_list,polarity):
+
 
 	topics=pd.DataFrame({'Topics':top_topics,
 		'Positive%':positives,
 		'Neutral%':neutrals,
 		'Negative%':negatives})
-	return topics
-
-def tweet_polarity(twitter,topics_list,polarity):
 	polarity_percent=[]
 
 	if len(topics_list)==0:
