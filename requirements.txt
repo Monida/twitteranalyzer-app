@@ -10,3 +10,5 @@ wordcloud
 sklearn
 rq
 base64
+io
+os
