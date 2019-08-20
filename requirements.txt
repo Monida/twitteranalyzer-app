@@ -9,4 +9,4 @@ textblob
 wordcloud
 sklearn
 rq
-base64o
+base64
