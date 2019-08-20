@@ -24,6 +24,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.manifold import MDS
 from sklearn.cluster import KMeans
 from sklearn.feature_extraction.text import TfidfVectorizer
+from matplotlib.ticker import FuncFormatter
 
 
 #---------------------------------------------------------------------------------
@@ -282,11 +283,11 @@ class Twitter:
     def polarity_label(self, s):
         polarity_val=round(TextBlob(s).sentiment.polarity,2)
         if polarity_val <= -0.5:
-            return 'negative'
+            return 'Negative'
         elif (polarity_val > -0.5 and polarity_val < 0.5):
-            return 'neutral'
+            return 'Neutral'
         else:
-            return 'positive'
+            return 'Positive'
             
     def subjectivity_label(self, s):
         subjectivity_val=round(TextBlob(s).sentiment.subjectivity,2)
@@ -426,7 +427,7 @@ class Twitter:
         self.topics=self.topics.iloc[0:5]
 
         del self.topics.index.name
-        
+
         return self.topics
     
     
@@ -462,7 +463,13 @@ class Twitter:
         values = polarities['count'].values
         labels = list(polarities['polarity_label'])
 
+        def percentages(x,pos):
+            return '%d' % (x/10) + '%'
+
+        formatter = FuncFormatter(percentages)
+
         fig, ax = plt.subplots()
+        ax.yaxis.set_major_formatter(formatter)
         plt.bar(x, values)
         plt.xticks(x, labels)
 

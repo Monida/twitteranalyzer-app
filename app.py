@@ -63,16 +63,35 @@ def return_query():
 @app.route('/moreinsights',methods=["POST"])
 def more_insights():
 
-    # Plot polarity
-    fig=twitter.polarity_plot()
-    fig.savefig('static/polarity_distribution.png')
-    
-    # Plot WordCloud
-    LOW=twitter.create_LOW()
-    fig=twitter.create_wordcloud(LOW)
-    fig.savefig('static/wordcloud.png')
 
-    return render_template('moreinsights.html',num_of_tweets=app.vars['num_of_tweets'])
+	if request.form['insights']=='topic1':
+		tweets_per_topic = twitter.topics['Count'][0]
+		selected_topic = twitter.topics.index[0]
+	elif request.form['insights']=='topic2':
+		tweets_per_topic = twitter.topics['Count'][1]
+		selected_topic = twitter.topics.index[1]
+	elif request.form['insights']=='topic3':
+		tweets_per_topic = twitter.topics['Count'][2]
+		selected_topic = twitter.topics.index[2]
+	elif request.form['insights']=='topic4':
+		tweets_per_topic = twitter.topics['Count'][3]
+		selected_topic = twitter.topics.index[3]
+	else:
+		tweets_per_topic = twitter.topics['Count'][4]
+		selected_topic = twitter.topics.index[4]
+
+
+	# Plot polarity
+	fig=twitter.polarity_plot()
+	fig.savefig('static/polarity_distribution.png')
+
+	# Plot WordCloud
+	LOW=twitter.create_LOW()
+	fig=twitter.create_wordcloud(LOW)
+	fig.savefig('static/wordcloud.png')
+
+	return render_template('moreinsights.html',num_of_tweets=app.vars['num_of_tweets'], 
+		num_of_tweets_per_topic=tweets_per_topic, topic=selected_topic)
 
 @app.route('/error',methods=["GET","POST"])
 def error():

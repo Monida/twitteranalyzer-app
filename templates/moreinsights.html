@@ -2,15 +2,12 @@
 <title>TwitterAnalyzer</title>
 <link rel=stylesheet type=text/css href='{{ url_for('static',filename='style.css')}}'>
 <div class=page>
-	<section id="moreinsights">
   		<h1>Topic: {{topic}}</h1>
   		<p>
-  			Total number of tweets found: {{num_of_tweets}} 
+  			Total number of tweets found: {{num_of_tweets}} <br>
 
-        Number of tweets for topic {{topic}}
+        Number of tweets for topic "{{topic}}" : {{num_of_tweets_per_topic}} 
   		</p>
-	</section>
-	<section id="moreinsights">
       <p>
         <h2>Most frequent words</h2>
         <img src="static/wordcloud.png" width="500"/>
@@ -18,15 +15,9 @@
   		<p>
   			<h2>General polarity distribution</h2>
   			<img src="static/polarity_distribution.png" width="500"/>
-  		</p>
-  		
-  	</section>
-  	<section id="backtoresults">
+  		</p>	
   		<form id="moreinsightsform" method="GET" action="show_analysis">
   			<input type="submit" id="back" value="back">
   		</form>
-  	</section>
-
-
 </div>
 </html>

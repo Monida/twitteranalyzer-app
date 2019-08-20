@@ -2,38 +2,31 @@
 <title>TwitterAnalyzer</title>
 <link rel=stylesheet type=text/css href='{{ url_for('static',filename='style.css')}}'>
 <div class=page>
-	<section id="resultsummary">
   		<h1>Search word: {{query}}</h1>
   		<p>
   			Number of tweets found: {{num_of_tweets}} 
   		</p>
-	</section>
-	<section id="results">
   		<p>
   			<h2>Top topics</h2><br>
   			<table>
           <tr>
             <td>
-            {{table|safe}} 
-            </td>
-            <td>
-            <form id="moreinsights" method="POST" action="moreinsights">
+            <form id="selecttopic" method="POST" action="moreinsights">
               <table>
                 <tr><th>More insightes</th></tr>
-                <tr><td><input type="submit" name="insights_topic1" value=""></td></tr>
-                <tr><td><input type="submit" name="insights_topic2" value=""></td></tr>
-                <tr><td><input type="submit" name="insights_topic3" value=""></td></tr>
-                <tr><td><input type="submit" name="insights_topic4" value=""></td></tr>
-                <tr><td><input type="submit" name="insights_topic5" value=""></td></tr>               
+                <tr><td><input type="submit" name="insights" value="topic1" class="topic"></td></tr>
+                <tr><td><input type="submit" name="insights" value="topic2" class="topic"></td></tr>
+                <tr><td><input type="submit" name="insights" value="topic3" class="topic"></td></tr>
+                <tr><td><input type="submit" name="insights" value="topic4" class="topic"></td></tr>
+                <tr><td><input type="submit" name="insights" value="topic5" class="topic"></td></tr>  
               </table>
-
             </form>
             </td>
+            <td>
+            {{table|safe}} 
+            </td>
           </tr>
-
-
         </table>
-
         <br>
   			<br>
   		</p>
@@ -41,14 +34,8 @@
         <h2>Topic clustering</h2>
         <img src="static/clustergram.png" width="500"/>
       </p>
-
-  	</section>
-  	<section id="returnresults">
   		<form id="returnresultsform" method="POST" action="home">
   			<input type="submit" id="new_search" value="New Search">
   		</form>
-  	</section>
-
-
 </div>
 </html>
