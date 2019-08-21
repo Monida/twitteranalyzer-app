@@ -9,6 +9,4 @@ textblob
 wordcloud
 sklearn
 rq
-base64
-io
-os
+pybase64
