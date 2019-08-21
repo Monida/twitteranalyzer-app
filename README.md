@@ -53,22 +53,28 @@ twitteranalyzer-app/
 
 **--Project folders description--**
 
-
 **+ twitteranalyzer-app:** This is the project folder. All files needed to run the app must be stored here. 
-  static/: This static folder contains all files needed by either the html files or the app itsealf to work.
-    style.css: This file contains the CSS code that gives format to all the html templates.
-  
+**+ static/:** This static folder contains all files needed by either the html files or the app itsealf to work.
+  **+  style.css:** This file contains the CSS code that gives format to all the html templates.
+      
 **+ keyword_list:** One of the functions of the TwitterAnalyzer is to find the topics that are being discussed and label them. So far it does that by comparingthe most frecuent words to the list of words (values) corresponding for each keyword (key) of the dictionary.
   
 **+ templates/:** This folder holds all the html templates. 
+
   **+  analyzing.html:** This file appears while the program downloads the tweets and analyze them to indicate the user that the data is being analyzed and the results will show up shortly. It is currently not implemented yet.
+  
   **+  enterquery.html:** This file displays the instructions to use the twitteranalyzer-app. It also contains the form for the user to enter a query as well as a search button.
+  
   **+  error.html:** This html file is showed when the app presents an error to provide the user with a corresponding message.
+  
   **+  moreinsights:** This html is called when in the returnquery.html the user clic on a specific topic to know more insights about it. 
+  
   **+  returnquery.html:** This is the main page that is shown after the program analyzes the tweets. It displays a summary about the tweets that were found.
   
 **+  twitter_analyzer:**
+
   **+  Twitter.py:** This file contains the class Twitter which is used by the app to download, clean, analyze and display the tweets and the corresponding analysis. 
+  
   **+  __init__:** This file indicates that the directory twitter_analyzer is a python package.
   
 **+  .gitignore:** This hidden text file contains the files and directories that are not tracked using git.
