@@ -10,7 +10,7 @@ Below you can find the description to the content of this repository. For those 
 
 **SHORT DESCRIPTION**
 
---Project folders structure--
+**--Project folders structure--**
 
 twitteranalyzer-app/
 
