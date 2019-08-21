@@ -37,19 +37,22 @@ def return_query():
     	else:
 	        app.vars['query']=request.form['query']
 	        
-	        # Analyze tweets
+	        # Get tweets
 	        twitter.query=app.vars['query']
 	        tweets=twitter.get_tweets()
 
-	        #Check for empty data frame
+	        # Check for empty data frame
 	        if tweets.empty ==True:
 	        	return redirect('/error')
+	        
+	        # Clean tweets
 	        tweets=twitter.clean_and_tokenize()
+
+	        # Perform topic modelling
 	        tweets=twitter.manualModelling()
 	        
 	        app.vars['num_of_tweets']=len(tweets)
 	        
-	        #topics=twitter.top_topics(tweets)
 	        twitter.top_topics(tweets)
 
 	        # Plot clustergram
@@ -60,10 +63,10 @@ def return_query():
 				num_of_tweets=app.vars['num_of_tweets'],table=twitter.topics.to_html(), clustergram=fig)
 
 
-@app.route('/moreinsights',methods=["POST"])
+@app.route('/moreinsights', methods=["POST"])
 def more_insights():
 
-
+	# Check what button was clicked on returnquery.html
 	if request.form['insights']=='topic1':
 		tweets_per_topic = twitter.topics['Count'][0]
 		selected_topic = twitter.topics.index[0]
@@ -105,34 +108,6 @@ def error():
 def clean_search():
 	app.vars={}
 	return None
-
-def find_polarities():
-	positives=tweet_polarity(twitter,top_topics,'positive')
-	neutrals=tweet_polarity(twitter,top_topics,'neutral')
-	negatives=tweet_polarity(twitter,top_topics,'negative')
-	return None 
-
-
-def tweet_polarity(twitter,topics_list,polarity):
-
-
-	topics=pd.DataFrame({'Topics':top_topics,
-		'Positive%':positives,
-		'Neutral%':neutrals,
-		'Negative%':negatives})
-	polarity_percent=[]
-
-	if len(topics_list)==0:
-		polarity_percent =[0]*len(topics_list)
-	else:
-		for topic in topics_list:
-			tweets_by_topic=twitter.tweets[twitter.tweets['topic_1']==topic]
-			tweets_by_polar=tweets_by_topic[tweets_by_topic['polarity_label']==polarity]
-			if len(tweets_by_polar)!=0:
-				polarity_percent.append(round(len(tweets_by_polar)/len(tweets_by_topic),2))
-			else:
-				polarity_percent.append(0)
-	return polarity_percent
 
 if __name__ == '__main__':
 	app.run(debug=True) 
