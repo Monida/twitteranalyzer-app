@@ -73,7 +73,7 @@ twitteranalyzer-app/
   
    **+  returnquery.html:** This is the main page that is shown after the program analyzes the tweets. It displays a summary about the tweets that were found.
   
-  **+  twitter_analyzer/:**
+  **+  twitter_analyzer/:** This folder holds the files of the twitter_analyzer package
 
    **+  Twitter.py:** This file contains the class Twitter which is used by the app to download, clean, analyze and display the tweets and the corresponding analysis. 
   
@@ -85,7 +85,7 @@ twitteranalyzer-app/
    
   **+  nltk.txt:** This text file is necesary to deploy to Heroku an app that uses NLTK. It contains the corpora that need to be downloaded for the app to work. During the app build up the corpora is downloaded and installed. To learn more about it go to this link: https://devcenter.heroku.com/articles/python-nltk.
   
-  **+  Procfile:** This is a file with no extension
+  **+  Procfile:** This is a file *with no extension* that contains the commands that need to be execuded during the app startup. Go to the following link to learn more about it: https://devcenter.heroku.com/articles/procfile.
   
   **+  Procfile.Windows:** This is also a file with no extension and just like Procfile it tells the app what code to run during start up, but it is an extra file needed when the app is built on Windows. 
   
