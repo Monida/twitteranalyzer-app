@@ -6,25 +6,25 @@ and
 https://ourcodingclub.github.io/2018/12/10/topic-modelling-python.html#top_mod
 """
 #%%
-from twython import Twython
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.ticker import FuncFormatter
+from twython import Twython
 from textblob import TextBlob
 import nltk
 from nltk.tokenize import TweetTokenizer
-import re
-import matplotlib.pyplot as plt
 from nltk.corpus import webtext
 from nltk.probability import FreqDist
+from nltk.stem.snowball import SnowballStemmer
+import re
 from wordcloud import WordCloud
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.decomposition import LatentDirichletAllocation
-from nltk.stem.snowball import SnowballStemmer
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.manifold import MDS
 from sklearn.cluster import KMeans
 from sklearn.feature_extraction.text import TfidfVectorizer
-from matplotlib.ticker import FuncFormatter
 import base64
 import io
 
@@ -41,31 +41,29 @@ class Twitter:
         self.topics=pd.DataFrame()
     
     def get_stop_words(self):
-        #Set stopwords
-        #nltk.download('stopwords')
+        # Set stopwords
         my_stopwords = nltk.corpus.stopwords.words('english')
         return my_stopwords
     
     def get_creds(self):
-        #Credentials
+        # Credentials
         import json
         with open("creds/twitter_credentials.json","r") as file:
             creds=json.load(file)
         return creds
 
-
-    def get_punkt(self):
-        nltk.download('punkt')
-        return None
-
-
-    #Mine tweets from twitter
+    # Mine tweets from twitter
+    # This function was inspired from: http://www.hristogueorguiev.com/
+    # basic-twitter-data-miner-and-data-analysis-python-twython-twitter-api-pandas-matplotlib/
+    # The MineData function is based on the Standard search API form Twitter
     def MineData(self,apiobj, pagestocollect = 10):
     
         results = apiobj.search(q=self.query, include_entities='true',
                                  tweet_mode='extended',count='100',
                                  result_type='recent',lang='en')
     
+    # The following code follows this logic
+    # https://developer.twitter.com/en/docs/tweets/timelines/guides/working-with-timelines
         data = results['statuses']
         i=0
         ratelimit=1
@@ -73,16 +71,13 @@ class Twitter:
         while results['statuses'] and i<pagestocollect: 
             
             if ratelimit < 1: 
-                #Rate limit time out needs to be added here in order to
-                #collect data exceeding available rate-limit 
+                # Rate limit time out needs to be added here in order to
+                # collect data exceeding available rate-limit 
                 print(str(ratelimit)+'Rate limit!')
                 break
             
             mid= results['statuses'][len(results['statuses']) -1]['id']-1
     
-            print(mid)
-            print('Results returned:'+str(len(results['statuses'])))
-            
             results = apiobj.search(q=self.query, max_id=str(mid)
                                  ,include_entities='true',
                                  tweet_mode='extended',count='100',
@@ -204,6 +199,7 @@ class Twitter:
                                 if word not in self.my_stopwords] # remove stopwords
     
         if bigrams:
+            # Create bigrams
             tweet_token_list = tweet_token_list+[tweet_token_list[i]+'_'+tweet_token_list[i+1]
                                                 for i in range(len(tweet_token_list)-1)]
         tweet = ' '.join(tweet_token_list)
@@ -211,7 +207,7 @@ class Twitter:
         tweet = self.remove_ht(tweet, portion ='hash')
         tweet = self.remove_spec_char(tweet)
         tweet = self.remove_double_space(tweet)
-        #tweet = spell_checker(tweet): not ready to be used. It takes to loon to process.
+        #tweet = spell_checker(tweet): not ready to be used. It takes to long to process.
         
         return tweet
 
@@ -222,8 +218,6 @@ class Twitter:
     def tokenize_and_stem(self,text):
         #This function takes a cleaned text, then tokenizes it and stemms it to
         #retrieve a list of stemmed tokens
-
-        #get_punkt()
 
         stemmer=SnowballStemmer('english')
         tokens = [word for sent in nltk.sent_tokenize(text) for
@@ -242,6 +236,59 @@ class Twitter:
 #---------------------------------------------------------------------------------
 #NLP functions
 #---------------------------------------------------------------------------------
+        
+    def clean_and_tokenize(self):
+        # Clean and tokenize the tweets
+        self.tweets['clean_text']=self.tweets['text'].apply(self.clean_tweet_mtr)
+        
+        # Drop all the tweets that after cleaning are left with an empty string
+        self.tweets=self.tweets[self.tweets.astype(str)['clean_text']!='[]']
+        
+        tokenizer=TweetTokenizer()
+        
+        def tokenize_txt(s):
+            return tokenizer.tokenize(s)
+        
+        self.tweets['token_text']=self.tweets['clean_text'].apply(tokenize_txt)
+        
+        return self.tweets
+
+
+    def manualModelling(self):
+        # Manually classify the topic
+        topics=pd.read_csv('static/keyword_list.csv',sep=',')
+        
+        # Transform topics dataframe into a dictionary
+        topics_dict={}
+        
+        for topic in topics.columns:
+            topics_dict[topic]=[word for word in list(topics[topic]) if str(word) !='nan']
+        
+        # Apply the assign_topic function 
+        # Find highest matching topic
+        self.tweets['topic_1']=self.tweets['token_text'].apply(self.assign_topic,
+                    args=(topics_dict,1))
+        
+        # Find second highest matching topic
+        self.tweets['topic_2']=self.tweets['token_text'].apply(self.assign_topic,
+                    args=(topics_dict,2))
+        
+        # Make column topic_1 and topic1_precent. Same with topic 2
+        self.tweets['topic_1_percent']=[row[1] for row in self.tweets['topic_1']]
+        self.tweets['topic_1']=[row[0] for row in self.tweets['topic_1']]
+        
+        
+        self.tweets['topic_2_percent']=[row[1] for row in self.tweets['topic_2']]
+        self.tweets['topic_2']=[row[0] for row in self.tweets['topic_2']]
+        
+        self.tweets['polarity']=self.tweets['clean_text'].apply(self.polarity)
+        self.tweets['polarity_label']=self.tweets['clean_text'].apply(self.polarity_label)
+        
+        self.tweets['objectivity']=self.tweets['clean_text'].apply(self.objectivity)
+        self.tweets['objectivity_label']=self.tweets['clean_text'].apply(self.objectivity_label)
+        
+        return self.tweets
+
 
     def assign_topic(self,token_list,topic_dict,n_highest=1):
     # This function takes a list of tokens and asign them with a topic from a given 
@@ -272,6 +319,7 @@ class Twitter:
         
         return [assigned_topic,match_percentage]
     
+    
     # Sentiment Analysis
     def polarity(self,s):
         polarity_val=round(TextBlob(s).sentiment.polarity,2)
@@ -298,57 +346,8 @@ class Twitter:
             return 'Neutral'
         else:
             return 'Objective'
-    
-    
-    def clean_and_tokenize(self):
-        # Clean and tokenize the tweets
-        self.tweets['clean_text']=self.tweets['text'].apply(self.clean_tweet_mtr)
-        
-        # Drop all the tweets that after cleaning are left with an empty string
-        self.tweets=self.tweets[self.tweets.astype(str)['clean_text']!='[]']
-        
-        tokenizer=TweetTokenizer()
-        
-        def tokenize_txt(s):
-            return tokenizer.tokenize(s)
-        
-        self.tweets['token_text']=self.tweets['clean_text'].apply(tokenize_txt)
-        
-        return self.tweets
-    
-    
-    def manualModelling(self):
-        # Manually classify the topic
-        topics=pd.read_csv('static/keyword_list.csv',sep=',')
-        topics_dict={}
-        
-        for topic in topics.columns:
-            topics_dict[topic]=[word for word in list(topics[topic]) if str(word) !='nan']
-        
-        # Apply the assign_topic function 
-        # Find highest matching topic
-        self.tweets['topic_1']=self.tweets['token_text'].apply(self.assign_topic,
-                    args=(topics_dict,1))
-        
-        # Find second highest matching topic
-        self.tweets['topic_2']=self.tweets['token_text'].apply(self.assign_topic,
-                    args=(topics_dict,2))
-        
-        # Make column topic_1 and topic1_precent. Same with topic 2
-        self.tweets['topic_1_percent']=[row[1] for row in self.tweets['topic_1']]
-        self.tweets['topic_1']=[row[0] for row in self.tweets['topic_1']]
-        
-        
-        self.tweets['topic_2_percent']=[row[1] for row in self.tweets['topic_2']]
-        self.tweets['topic_2']=[row[0] for row in self.tweets['topic_2']]
-        
-        self.tweets['polarity']=self.tweets['clean_text'].apply(self.polarity)
-        self.tweets['polarity_label']=self.tweets['clean_text'].apply(self.polarity_label)
-        
-        self.tweets['objectivity']=self.tweets['clean_text'].apply(self.objectivity)
-        self.tweets['objectivity_label']=self.tweets['clean_text'].apply(self.objectivity_label)
-        
-        return self.tweets
+
+
 
     # Inspired by: https://ourcodingclub.github.io/2018/12/10/topic-modelling-python.html#apply
     def vectorize_tweets(self):
@@ -532,6 +531,7 @@ class Twitter:
                             for i in topic.argsort()[:-no_top_words - 1:-1]]
         return pd.DataFrame(topic_dict)
     
+
     def create_wordcloud(self,tokenized_text):
     #This function takes a tokenized text and returns the WordCloud plot
         #Create frequency distribution from tokenized text
@@ -552,6 +552,7 @@ class Twitter:
         figure_url = base64.b64encode(img.getvalue()).decode()
         plt.close()
         return 'data:image/png;base64,{}'.format(figure_url)
+
 
     # Inspired by Natural Language Process Recipes, Akshay Kulkarni & Adarsha Shivananda, 2019.
     def create_clustergram(self,top_topics):

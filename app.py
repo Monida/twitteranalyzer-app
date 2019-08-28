@@ -42,7 +42,7 @@ def return_query():
 	        tweets=twitter.get_tweets()
 
 	        # Check for empty data frame
-	        if tweets.empty ==True:
+	        if tweets.empty == True:
 	        	return redirect('/error')
 	        
 	        # Clean tweets
