@@ -381,7 +381,7 @@ class Twitter:
         for i in range(1,len(tweets_list)+1):
             ranks.append(i)
         # Proprocessing and TF-IDF feature engineering
-        self.my_stopwords = self.my_stopwords +["'d","'s", 'abov', 'ani', 'becaus', 'befor', 'could', 'doe', 'dure', 'might', 'must', "n't", 'need', 'onc', 'onli', 'ourselv', 'sha', 'themselv', 'veri', 'whi', 'wo', 'would', 'yourselv']
+        self.my_stopwords = self.my_stopwords +["'d","'s", 'amp','abov', 'ani', 'becaus', 'befor', 'could', 'doe', 'dure', 'might', 'must', "n't", 'need', 'onc', 'onli', 'ourselv', 'sha', 'themselv', 'veri', 'whi', 'wo', 'would', 'yourselv']
         tfidf_vectorizer = TfidfVectorizer(max_df=0.9, max_features=200000,
                                            min_df=10, stop_words=self.my_stopwords,
                                            use_idf=True, tokenizer=self.tokenize_and_stem, 
