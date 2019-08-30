@@ -29,7 +29,9 @@ def enter_query():
 def return_query():
     if request.method=="GET":
         return render_template('returnquery.html', query=app.vars['query'], 
-				num_of_tweets=app.vars['num_of_tweets'],table=twitter.topics.to_html())
+				num_of_tweets=app.vars['num_of_tweets'],
+				table=twitter.top_words['words'].to_html(index=False),
+				clustergram=fig)
     
     if request.method=="POST":
     	if request.form['query']=='':
@@ -45,22 +47,37 @@ def return_query():
 	        if tweets.empty == True:
 	        	return redirect('/error')
 	        
+
 	        # Clean tweets
 	        tweets=twitter.clean_and_tokenize()
 
+	        app.vars['num_of_tweets']=len(tweets)
+
 	        # Perform topic modelling
 	        tweets=twitter.manualModelling()
-	        
-	        app.vars['num_of_tweets']=len(tweets)
-	        
-	        twitter.top_topics(tweets)
 
+	        vectorized_tweets=twitter.vectorize_tweets()
+
+	        matrix=vectorized_tweets['words_matrix']
+
+	        feature_names=vectorized_tweets['feature_names']
+
+	        LDA_model=twitter.fit_LDA(matrix)
+
+	        twitter.LDA_top_words(LDA_model,feature_names)
+
+	             
 	        # Plot clustergram
+	        twitter.top_labeled_topics()
 	        clusters_data=twitter.cluster_text()
 	        fig=twitter.create_clustergram(twitter.topics)
+
+
 	        
 	        return render_template('returnquery.html', query=app.vars['query'], 
-				num_of_tweets=app.vars['num_of_tweets'],table=twitter.topics.to_html(), clustergram=fig)
+				num_of_tweets=app.vars['num_of_tweets'],
+				table=twitter.top_words['words'].to_html(index=False), 
+				clustergram=fig)
 
 
 @app.route('/moreinsights', methods=["POST"])

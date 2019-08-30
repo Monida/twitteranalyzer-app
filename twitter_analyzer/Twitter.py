@@ -362,7 +362,7 @@ class Twitter:
         return {'words_matrix':words_matrix,'feature_names':feature_names}
     
     
-    def fit_LDA(self,words_matrix,number_of_topics=10):    
+    def fit_LDA(self,words_matrix,number_of_topics=5):    
             
         model = LatentDirichletAllocation(n_components=number_of_topics, random_state=0)
         
@@ -407,9 +407,11 @@ class Twitter:
 #---------------------------------------------------------------------------------
 
     
-    def top_topics(self, n=5):
-        #Tweets: the tweets dataframe 
-        #n: top n topics
+    def top_labeled_topics(self, n=5):
+        # This function displays the label of the topics that were assigned 
+        # usingManualModelling and asign_Topic
+        # Tweets: the tweets dataframe 
+        # n: top n topics
         self.topics=self.tweets.groupby('topic_1').count()
     
         self.topics=self.topics.rename(columns = {'text':'Count'})
@@ -503,7 +505,7 @@ class Twitter:
 
         x = np.arange(3)
         values = objectivities['count'].values
-        labels = list(objectivities['objectivity_label'])
+        labels = ['Subjetive','Neutral','Objective']
 
         def percentages(x,pos):
             return '%d' % (x/10) + '%'
@@ -522,14 +524,22 @@ class Twitter:
         return 'data:image/png;base64,{}'.format(figure_url)
     
     
-    def display_topics(self, model, feature_names, no_top_words):
-        topic_dict = {}
+    def LDA_top_words(self, model, feature_names, num_top_words=10):
+        # This function returns the topics (top words) found using the fit_LDA function
+        self.top_words={}
+        words=[]
+        weights=[]
+        
         for topic_idx, topic in enumerate(model.components_):
-            topic_dict["Topic %d words" % (topic_idx)]= ['{}'.format(feature_names[i])
-                            for i in topic.argsort()[:-no_top_words - 1:-1]]
-            topic_dict["Topic %d weights" % (topic_idx)]= ['{:.1f}'.format(topic[i])
-                            for i in topic.argsort()[:-no_top_words - 1:-1]]
-        return pd.DataFrame(topic_dict)
+            words.append(['{}'.format(feature_names[i])
+                            for i in topic.argsort()[:-num_top_words - 1:-1]])
+            weights.append(['{:.1f}'.format(topic[i])
+                            for i in topic.argsort()[:-num_top_words - 1:-1]])
+        
+        self.top_words['words']=pd.DataFrame(words)
+        self.top_words['weights']=pd.DataFrame(weights)
+
+        return self.top_words
     
 
     def create_wordcloud(self,tokenized_text):
