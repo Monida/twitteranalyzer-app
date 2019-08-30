@@ -27,6 +27,8 @@ from sklearn.cluster import KMeans
 from sklearn.feature_extraction.text import TfidfVectorizer
 import base64
 import io
+from PIL import Image
+import os.path
 
 #---------------------------------------------------------------------------------
 # Functions to get the tweets
@@ -168,6 +170,9 @@ class Twitter:
                 
         return re.sub(pattern,replace, s)
                       
+    def remove_query(self,s, replace= ' '):
+        return re.sub(self.query,replace,s)
+
     def remove_spec_char(self,s, replace=' '):
         return re.sub(r'[^\w]', replace,s )
     
@@ -552,7 +557,8 @@ class Twitter:
         fdist=nltk.FreqDist(frequent_words)
         
         #Create WordCloud
-        wcloud = WordCloud(background_color='white').generate_from_frequencies(fdist)
+        wcloud_mask=np.array(Image.open('static/twitter_nlp.png'))
+        wcloud = WordCloud(background_color='white',mask=wcloud_mask).generate_from_frequencies(fdist)
         img=io.BytesIO()
         fig = plt.figure()
         plt.axis("off")

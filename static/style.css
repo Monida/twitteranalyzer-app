@@ -8,6 +8,8 @@ p               { color: #465362;}
 
 .page           { margin: 2em auto; width: 50em; border: 3px solid #345995;
                   padding: 1em; background: white; }
+.page2           { margin: 2em auto; width: 35em; border: 3px solid #345995;
+                  padding: 1em; background: white; }
 .entries        { list-style: none; margin: 0; padding: 0; }
 .entries li     { margin: 0.8em 1.2em; }
 .entries li h2  { margin-left: -1em; }
@@ -18,5 +20,5 @@ p               { color: #465362;}
 .error          { background: #F0D6D6; padding: 0.5em; } 
 
 table.topic {width: 20em; height: 20em; font-size: 	10em; background-color:#4CAF50;}
-.contact		{margin: 4em auto; width: 50em; border: 3px solid #345995; 
+.contact		{margin: 4em auto; width: 35em; border: 3px solid #345995; 
 				 padding: 1em; background: white;}
