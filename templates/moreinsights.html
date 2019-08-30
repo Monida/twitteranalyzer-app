@@ -4,21 +4,21 @@
 <div class=page>
   		<h1>Topic: {{topic}}</h1>
   		<p>
-  			Total number of tweets found: {{num_of_tweets}} <br>
+  			<b>Total number of tweets found:</b> {{num_of_tweets}} <br>
 
-        Number of tweets for topic "{{topic}}" : {{num_of_tweets_per_topic}} 
+        <b>Number of tweets for topic "{{topic}}" :</b> {{num_of_tweets_per_topic}} 
   		</p>
       <p>
         <h2>Most frequent words</h2>
-        <img src="{{wordcloud}}" width="500"/>
+        <img src="{{wordcloud}}" width="500" align="middle"/>
       </p>
       <p>
         <h2>General polarity</h2>
-        <img src="{{polarity}}" width="500"/>
+        <img src="{{polarity}}" width="500" align="middle"/>
       </p>  
       <p>
         <h2>General objectivity</h2>
-        <img src="{{objectivity}}" width="500"/>
+        <img src="{{objectivity}}" width="500" align="middle"/>
       </p>  
 
   		<form id="moreinsightsform" method="GET" action="show_analysis">

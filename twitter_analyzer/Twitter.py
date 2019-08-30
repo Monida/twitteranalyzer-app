@@ -479,7 +479,7 @@ class Twitter:
         
         fig, ax = plt.subplots()
         ax.yaxis.set_major_formatter(formatter)
-        plt.bar(x, values)
+        plt.bar(x, values,color='#03cea4')
         plt.xticks(x, labels)
         plt.savefig(img,format='png')
         img.seek(0)
@@ -514,7 +514,7 @@ class Twitter:
 
         fig, ax = plt.subplots()
         ax.yaxis.set_major_formatter(formatter)
-        plt.bar(x, values)
+        plt.bar(x, values, color='#03cea4')
         plt.xticks(x, labels)
         plt.savefig(img,format='png')
         img.seek(0)
@@ -552,7 +552,7 @@ class Twitter:
         fdist=nltk.FreqDist(frequent_words)
         
         #Create WordCloud
-        wcloud = WordCloud().generate_from_frequencies(fdist)
+        wcloud = WordCloud(background_color='white').generate_from_frequencies(fdist)
         img=io.BytesIO()
         fig = plt.figure()
         plt.axis("off")
