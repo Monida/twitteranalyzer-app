@@ -30,8 +30,8 @@ def return_query():
     if request.method=="GET":
         return render_template('returnquery.html', query=app.vars['query'], 
 				num_of_tweets=app.vars['num_of_tweets'],
-				table=twitter.top_words['words'].to_html(index=False),
-				clustergram=fig)
+				table=twitter.top_words['words'].to_html(index=False,header=False),
+				clustergram=twitter.clustergram)
     
     if request.method=="POST":
     	if request.form['query']=='':
@@ -70,14 +70,14 @@ def return_query():
 	        # Plot clustergram
 	        twitter.top_labeled_topics()
 	        clusters_data=twitter.cluster_text()
-	        fig=twitter.create_clustergram(twitter.topics)
+	        twitter.create_clustergram(twitter.topics)
 
 
 	        
 	        return render_template('returnquery.html', query=app.vars['query'], 
 				num_of_tweets=app.vars['num_of_tweets'],
-				table=twitter.top_words['words'].to_html(index=False), 
-				clustergram=fig)
+				table=twitter.top_words['words'].to_html(index=False, header=False), 
+				clustergram=twitter.clustergram)
 
 
 @app.route('/moreinsights', methods=["POST"])

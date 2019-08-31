@@ -1,6 +1,13 @@
 <!doctype html>
 <title>TwitterAnalyzer</title>
 <link rel=stylesheet type=text/css href='{{ url_for('static',filename='style.css')}}'>
+<style>
+  input[type=submit]{background-color: #03cea4;
+                     border: none;
+                     color: white;
+                     cursor: pointer;
+                     padding: 3px 6px;}
+</style>
 <div class=page>
   		<h1>Search word: {{query}}</h1>
   		<p>
@@ -8,22 +15,23 @@
   		</p>
   		<p>
   			<h2>Top topics</h2><br>
+
+        <p>Click on topic for more insights.</p>
   			<table>
           <tr>
             <td>
             <form id="selecttopic" method="POST" action="moreinsights">
               <table>
-                <tr><th>More insights</th></tr>
-                <tr><td><input type="submit" name="insights" value="topic1" class="topic"></td></tr>
-                <tr><td><input type="submit" name="insights" value="topic2" class="topic"></td></tr>
-                <tr><td><input type="submit" name="insights" value="topic3" class="topic"></td></tr>
-                <tr><td><input type="submit" name="insights" value="topic4" class="topic"></td></tr>
-                <tr><td><input type="submit" name="insights" value="topic5" class="topic"></td></tr>  
+                <tr><td><input type="submit" name="insights" value="topic 1" class="topic"></td></tr>
+                <tr><td><input type="submit" name="insights" value="topic 2" class="topic"></td></tr>
+                <tr><td><input type="submit" name="insights" value="topic 3" class="topic"></td></tr>
+                <tr><td><input type="submit" name="insights" value="topic 4" class="topic"></td></tr>
+                <tr><td><input type="submit" name="insights" value="topic 5" class="topic"></td></tr>  
               </table>
+                <td>
+                {{table|safe}} 
+                </td>  
             </form>
-            </td>
-            <td>
-            {{table|safe}} 
             </td>
           </tr>
         </table>
@@ -32,7 +40,7 @@
   		</p>
       <p>
         <h2>Topic clustering</h2>
-        <img src="{{clustergram}}" width="500"/>
+        <img src="{{clustergram}}" width="500" class="center"/>
       </p>
   		<form id="returnresultsform" method="POST" action="/">
   			<input type="submit" id="new_search" value="New Search">

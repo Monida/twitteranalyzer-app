@@ -619,7 +619,9 @@ class Twitter:
         plt.savefig(img,format='png')
         img.seek(0)
         figure_url = base64.b64encode(img.getvalue()).decode()
-        return 'data:image/png;base64,{}'.format(figure_url)
+        self.clustergram='data:image/png;base64,{}'.format(figure_url)
+
+        return self.clustergram
 
 
 
