@@ -57,10 +57,14 @@ class Twitter:
     # Mine tweets from twitter
     # This function was inspired from: http://www.hristogueorguiev.com/
     # basic-twitter-data-miner-and-data-analysis-python-twython-twitter-api-pandas-matplotlib/
-    # The MineData function is based on the Standard search API form Twitter
-    def MineData(self,apiobj, pagestocollect = 10):
+    # The get_tweets function is based on the Standard search API form Twitter
+    def get_tweets(self, pagestocollect = 20):
+
+        # AUTHENTICATE
+        twitter_obj = Twython(self.creds['CONSUMER_KEY'], self.creds['CONSUMER_SECRET'],  
+                            self.creds['ACCESS_TOKEN'], self.creds['ACCESS_TOKEN_SECRET'])
     
-        results = apiobj.search(q=self.query, include_entities='true',
+        results = twitter_obj.search(q=self.query, include_entities='true',
                                  tweet_mode='extended',count='100',
                                  result_type='recent',lang='en')
     
@@ -80,24 +84,19 @@ class Twitter:
             
             mid= results['statuses'][len(results['statuses']) -1]['id']-1
     
-            results = apiobj.search(q=self.query, max_id=str(mid)
+            results = twitter_obj.search(q=self.query, max_id=str(mid)
                                  ,include_entities='true',
                                  tweet_mode='extended',count='100',
                                  result_type='recent',lang='en')
             
             data+=results['statuses']
             i+=1
-            ratelimit = int(apiobj.get_lastfunction_header('x-rate-limit-remaining'))
+            ratelimit = int(twitter_obj.get_lastfunction_header('x-rate-limit-remaining'))
     
         return data
     
-    def get_tweets(self):  
-        # AUTHENTICATE
-        twitter_obj = Twython(self.creds['CONSUMER_KEY'], self.creds['CONSUMER_SECRET'],  
-                            self.creds['ACCESS_TOKEN'], self.creds['ACCESS_TOKEN_SECRET'])
-        
-        # Get the tweets
-        dataaccum = self.MineData(twitter_obj,20)
+
+    def reformat_tweets(self,data):
         
         #Reformat data as DataFrame format
         text=[]
@@ -107,7 +106,7 @@ class Twitter:
         lang=[]
         
     
-        for tweet in dataaccum:
+        for tweet in data:
             text.append(tweet['full_text'])
             date.append(tweet['created_at'])
             location.append(tweet['geo'])

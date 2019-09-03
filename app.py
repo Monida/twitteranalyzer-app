@@ -7,7 +7,7 @@ from rq import Queue
 from worker import conn
 
 
-q= Queue(connection = conn)
+q= Queue('low',connection = conn)
 
 
 app = Flask(__name__)
@@ -40,11 +40,14 @@ def return_query():
 	        twitter.query=app.vars['query']
 	        
 	        # Send task to background worker
-	        results=q.enqueue(twitter.get_tweets())
+	        results=q.enqueue('twitter.get_tweets()')
 
 	        queued_jobs=q.jobs
 
-	        tweets=queued_jobs[0]
+	        data=queued_jobs[0]
+
+	        # Reformat tweets
+	        tweets=twitter.reformat_tweets(data)
 
 	        # Check for empty data frame
 	        if tweets.empty == True:
