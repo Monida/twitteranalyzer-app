@@ -3,14 +3,11 @@ import pandas as pd
 from twitter_analyzer.Twitter import Twitter
 import os
 import base64
-#from rq import Queue
-#from worker import conn
+from rq import Queue
+from worker import conn
 
 
-#q= Queue(connection = conn)
-
-#twitter_helper= Twitter()
-#results = q.enqueue(twitter_helper.get_punkt())
+q= Queue(connection = conn)
 
 
 app = Flask(__name__)
@@ -41,7 +38,9 @@ def return_query():
 	        
 	        # Get tweets
 	        twitter.query=app.vars['query']
-	        tweets=twitter.get_tweets()
+	        
+	        # Send task to background worker
+	        tweets=q.enqueue(twitter.get_tweets())
 
 	        # Check for empty data frame
 	        if tweets.empty == True:

@@ -10,4 +10,4 @@ wordcloud
 sklearn
 rq
 pybase64
-pillow
+pillowrequ
