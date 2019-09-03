@@ -40,7 +40,9 @@ def return_query():
 	        twitter.query=app.vars['query']
 	        
 	        # Send task to background worker
-	        tweets=q.enqueue(twitter.get_tweets())
+	        results=q.enqueue(twitter.get_tweets())
+
+	        tweets=results[0]
 
 	        # Check for empty data frame
 	        if tweets.empty == True:
