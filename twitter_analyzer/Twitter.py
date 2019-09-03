@@ -358,7 +358,7 @@ class Twitter:
     def vectorize_tweets(self):
         # the vectorizer object will be used to transform text to vector form
         vectorizer = CountVectorizer(max_df=0.9, min_df=15, token_pattern='\w+|\$[\d\.]+|\S+')
-        
+
         # apply transformation
         words_matrix = vectorizer.fit_transform(self.tweets['clean_text']).toarray()
         
