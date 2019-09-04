@@ -8,8 +8,6 @@ https://ourcodingclub.github.io/2018/12/10/topic-modelling-python.html#top_mod
 #%%
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
-from matplotlib.ticker import FuncFormatter
 from twython import Twython
 from textblob import TextBlob
 import nltk
@@ -29,6 +27,9 @@ import base64
 import io
 from PIL import Image
 import os.path
+
+import matplotlib.pyplot as plt
+from matplotlib.ticker import FuncFormatter
 
 #---------------------------------------------------------------------------------
 # Functions to get the tweets
