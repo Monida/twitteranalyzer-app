@@ -453,9 +453,28 @@ class Twitter:
             LOW+=new_token
         return LOW
 
-#---------------------------------------------------------------------------------
-# Visualization functions
-#---------------------------------------------------------------------------------
+
+    #---------------------------------------------------------------------------------
+    # Visualization functions
+    #---------------------------------------------------------------------------------
+
+    def LDA_top_words(self, model, feature_names, num_top_words=10):
+        # This function returns the topics (top words) found using the fit_LDA function
+        self.top_words={}
+        words=[]
+        weights=[]
+        
+        for topic_idx, topic in enumerate(model.components_):
+            words.append(['{}'.format(feature_names[i])
+                            for i in topic.argsort()[:-num_top_words - 1:-1]])
+            weights.append(['{:.1f}'.format(topic[i])
+                            for i in topic.argsort()[:-num_top_words - 1:-1]])
+        
+        self.top_words['words']=pd.DataFrame(words)
+        self.top_words['weights']=pd.DataFrame(weights)
+
+        return self.top_words
+
 '''
     def polarity_plot(self,topic):
     # Figure returning inpired by:
@@ -530,22 +549,7 @@ class Twitter:
         return 'data:image/png;base64,{}'.format(figure_url)
  '''   
     
-    def LDA_top_words(self, model, feature_names, num_top_words=10):
-        # This function returns the topics (top words) found using the fit_LDA function
-        self.top_words={}
-        words=[]
-        weights=[]
-        
-        for topic_idx, topic in enumerate(model.components_):
-            words.append(['{}'.format(feature_names[i])
-                            for i in topic.argsort()[:-num_top_words - 1:-1]])
-            weights.append(['{:.1f}'.format(topic[i])
-                            for i in topic.argsort()[:-num_top_words - 1:-1]])
-        
-        self.top_words['words']=pd.DataFrame(words)
-        self.top_words['weights']=pd.DataFrame(weights)
 
-        return self.top_words
     
 '''
     def create_wordcloud(self,tokenized_text):

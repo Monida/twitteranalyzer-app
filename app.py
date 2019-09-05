@@ -69,6 +69,10 @@ def return_query():
 
 	        	twitter.LDA_top_words(LDA_model,feature_names)
 
+	        	return render_template('returnquery.html', query=app.vars['query'],
+					num_of_tweets=app.vars['num_of_tweets'],
+					table=twitter.top_words['words'].to_html(index=False, header=False))
+
 	             
 	        # Plot clustergram
 '''
@@ -83,7 +87,6 @@ def return_query():
 				table=twitter.top_words['words'].to_html(index=False, header=False), 
 				clustergram=twitter.clustergram)
 '''
-			return render_template('returnquery.html', query=app.vars['query'],num_of_tweets=app.vars['num_of_tweets'],table=twitter.top_words['words'].to_html(index=False, header=False))
 
 @app.route('/moreinsights', methods=["POST"])
 def more_insights():
@@ -105,6 +108,10 @@ def more_insights():
 		tweets_per_topic = twitter.topics['Count'][4]
 		selected_topic = twitter.topics.index[4]
 
+
+	return render_template('moreinsights.html',num_of_tweets=app.vars['num_of_tweets'],num_of_tweets_per_topic=tweets_per_topic, topic=selected_topic)
+
+
 	# Plot WordCloud
 '''
 	LOW = twitter.create_LOW(selected_topic)
@@ -120,8 +127,7 @@ def more_insights():
 		num_of_tweets_per_topic=tweets_per_topic, topic=selected_topic,wordcloud=fig1,
 		polarity=fig2, objectivity=fig3)
 '''
-	return render_template('moreinsights.html',num_of_tweets=app.vars['num_of_tweets'],num_of_tweets_per_topic=tweets_per_topic, topic=selected_topic)
-
+	
 @app.route('/error',methods=["GET","POST"])
 def error():
 	if request.method=="POST":
