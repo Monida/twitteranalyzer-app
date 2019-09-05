@@ -28,8 +28,8 @@ import io
 from PIL import Image
 import os.path
 
-import matplotlib.pyplot as plt
-from matplotlib.ticker import FuncFormatter
+#import matplotlib.pyplot as plt
+#from matplotlib.ticker import FuncFormatter
 
 #---------------------------------------------------------------------------------
 # Functions to get the tweets
@@ -456,7 +456,7 @@ class Twitter:
 #---------------------------------------------------------------------------------
 # Visualization functions
 #---------------------------------------------------------------------------------
-
+'''
     def polarity_plot(self,topic):
     # Figure returning inpired by:
     # https://technovechno.com/creating-graphs-in-python-using-matplotlib-flask-framework-pythonanywhere/
@@ -493,7 +493,8 @@ class Twitter:
 
         return 'data:image/png;base64,{}'.format(figure_url)
 
-
+'''
+'''
     def objectivity_plot(self,topic):
 
         objectivities=self.tweets[self.tweets['topic_1']==topic]
@@ -527,7 +528,7 @@ class Twitter:
         plt.close()
 
         return 'data:image/png;base64,{}'.format(figure_url)
-    
+ '''   
     
     def LDA_top_words(self, model, feature_names, num_top_words=10):
         # This function returns the topics (top words) found using the fit_LDA function
@@ -546,7 +547,7 @@ class Twitter:
 
         return self.top_words
     
-
+'''
     def create_wordcloud(self,tokenized_text):
     #This function takes a tokenized text and returns the WordCloud plot
         #Create frequency distribution from tokenized text
@@ -568,7 +569,8 @@ class Twitter:
         figure_url = base64.b64encode(img.getvalue()).decode()
         plt.close()
         return 'data:image/png;base64,{}'.format(figure_url)
-
+'''
+'''
 
     # Inspired by Natural Language Process Recipes, Akshay Kulkarni & Adarsha Shivananda, 2019.
     def create_clustergram(self,top_topics):
@@ -585,11 +587,11 @@ class Twitter:
         
         #Set up cluster names using a dict. Later change it by authomatic topic modelling
 
-        cluster_names = {0: list(top_topics.index)[0],
-                         1: list(top_topics.index)[1],
-                         2: list(top_topics.index)[2],
-                         3: list(top_topics.index)[3],
-                         4: list(top_topics.index)[4]}
+        cluster_names = {0: 'Topic 1',
+                         1: 'Topic 2',
+                         2: 'Topic 3',
+                         3: 'Topic 4',
+                         4: 'Topic 5'}
         
         # Plot clustergram
         # Create data frame that has the result of the MDS and the cluster
@@ -622,7 +624,7 @@ class Twitter:
         self.clustergram='data:image/png;base64,{}'.format(figure_url)
 
         return self.clustergram
-
+'''
 
 
 

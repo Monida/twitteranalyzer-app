@@ -24,56 +24,54 @@ def enter_query():
 
 @app.route('/show_analysis',methods=["GET","POST"])
 def return_query():
-    if request.method=="GET":
-        return render_template('returnquery.html', query=app.vars['query'], 
-				num_of_tweets=app.vars['num_of_tweets'],
-				table=twitter.top_words['words'].to_html(index=False,header=False),
-				clustergram=twitter.clustergram)
-    
-    if request.method=="POST":
-    	if request.form['query']=='':
-    		return redirect('/')
-    	else:
-	        app.vars['query']=request.form['query']
+	if request.method=="GET":
+		return render_template('returnquery.html', query=app.vars['query'], num_of_tweets=app.vars['num_of_tweets'],
+				table=twitter.top_words['words'].to_html(index=False,header=False))
+	if request.method=="POST":
+    		if request.form['query']=='':
+    			return redirect('/')
+    		else:
+	        	app.vars['query']=request.form['query']
 	        
-	        # Get tweets
-	        twitter.query=app.vars['query']
+	        	# Get tweets
+	        	twitter.query=app.vars['query']
 	        
-	        # Send task to background worker
-	        results=q.enqueue('twitter.get_tweets()')
+		        # Send task to background worker
+		        results=q.enqueue('twitter.get_tweets()')
+	
+		        queued_jobs=q.jobs
 
-	        queued_jobs=q.jobs
+	        	data=queued_jobs[0]
 
-	        data=queued_jobs[0]
+		        # Refomat tweets
+		        tweets=twitter.reformat_tweets(data)
 
-	        # Reformat tweets
-	        tweets=twitter.reformat_tweets(data)
-
-	        # Check for empty data frame
-	        if tweets.empty == True:
-	        	return redirect('/error')
+	        	# Check for empty data frame
+		        if tweets.empty == True:
+		        	return redirect('/error')
 	        
 
-	        # Clean tweets
-	        tweets=twitter.clean_and_tokenize()
+		        # Clean tweets
+		        tweets=twitter.clean_and_tokenize()
+	
+		        app.vars['num_of_tweets']=len(tweets)
 
-	        app.vars['num_of_tweets']=len(tweets)
+	        	# Perform topic modelling
+		        tweets=twitter.manualModelling()
+	
+		        vectorized_tweets=twitter.vectorize_tweets()
 
-	        # Perform topic modelling
-	        tweets=twitter.manualModelling()
+	        	matrix=vectorized_tweets['words_matrix']
 
-	        vectorized_tweets=twitter.vectorize_tweets()
+		        feature_names=vectorized_tweets['feature_names']
 
-	        matrix=vectorized_tweets['words_matrix']
+		        LDA_model=twitter.fit_LDA(matrix)
 
-	        feature_names=vectorized_tweets['feature_names']
-
-	        LDA_model=twitter.fit_LDA(matrix)
-
-	        twitter.LDA_top_words(LDA_model,feature_names)
+	        	twitter.LDA_top_words(LDA_model,feature_names)
 
 	             
 	        # Plot clustergram
+'''
 	        twitter.top_labeled_topics()
 	        clusters_data=twitter.cluster_text()
 	        twitter.create_clustergram(twitter.topics)
@@ -84,7 +82,8 @@ def return_query():
 				num_of_tweets=app.vars['num_of_tweets'],
 				table=twitter.top_words['words'].to_html(index=False, header=False), 
 				clustergram=twitter.clustergram)
-
+'''
+			return render_template('returnquery.html', query=app.vars['query'],num_of_tweets=app.vars['num_of_tweets'],table=twitter.top_words['words'].to_html(index=False, header=False))
 
 @app.route('/moreinsights', methods=["POST"])
 def more_insights():
@@ -107,6 +106,7 @@ def more_insights():
 		selected_topic = twitter.topics.index[4]
 
 	# Plot WordCloud
+'''
 	LOW = twitter.create_LOW(selected_topic)
 	fig1 = twitter.create_wordcloud(LOW)
 
@@ -119,6 +119,8 @@ def more_insights():
 	return render_template('moreinsights.html',num_of_tweets=app.vars['num_of_tweets'], 
 		num_of_tweets_per_topic=tweets_per_topic, topic=selected_topic,wordcloud=fig1,
 		polarity=fig2, objectivity=fig3)
+'''
+	return render_template('moreinsights.html',num_of_tweets=app.vars['num_of_tweets'],num_of_tweets_per_topic=tweets_per_topic, topic=selected_topic)
 
 @app.route('/error',methods=["GET","POST"])
 def error():
