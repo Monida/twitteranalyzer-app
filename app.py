@@ -91,13 +91,9 @@ Sep 9 2019
 '''
 def background_worker():
 	job=q.enqueue('twitter.get_tweets()')
-
-	# Wait for while the tweets are downloaded
-	while job.result == None:
-		pass
-
+	time.sleep(40)
 	analyze_tweets(job.result)
-	
+
 	return None
 
 @app.route('/analyzing')
