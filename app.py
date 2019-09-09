@@ -25,9 +25,11 @@ def enter_query():
 @app.route('/show_analysis',methods=["GET","POST"])
 def return_query():
 	if request.method=="GET":
+		# Coming from moreinsights.html
 		return render_template('returnquery.html', query=app.vars['query'], num_of_tweets=app.vars['num_of_tweets'],
 				table=twitter.top_words['words'].to_html(index=False,header=False))
 	if request.method=="POST":
+		# Coming from enterquery.html
     		if request.form['query']=='':
     			return redirect('/')
     		else:
@@ -36,19 +38,13 @@ def return_query():
 	        	# Get tweets
 	        	twitter.query=app.vars['query']
 	        
-		        # Send task to background worker
-		        job=q.enqueue('twitter.get_tweets()')
+		        # Send get_tweets task to background worker
+		        #job=q.enqueue('twitter.get_tweets()')
+		        background_worker()
+		        return render_template('analyzing.html')
 
-		        if job.result==None:
-		        	print('Not finished')
-		        	status='Not finished'
-		        elif job.result!=None:
-		        	status='Finished'
-
-		        #queued_jobs=q.jobs
-
-	        	#data=queued_jobs[0]
-
+'''
+Sep 9 2019
 		        # Refomat tweets
 		        tweets=twitter.reformat_tweets(status)
 
@@ -78,7 +74,7 @@ def return_query():
 	        	return render_template('returnquery.html', query=app.vars['query'],
 					num_of_tweets=app.vars['num_of_tweets'],
 					table=twitter.top_words['words'].to_html(index=False, header=False))
-
+'''
 	             
 	        # Plot clustergram
 '''
@@ -93,6 +89,51 @@ def return_query():
 				table=twitter.top_words['words'].to_html(index=False, header=False), 
 				clustergram=twitter.clustergram)
 '''
+def background_worker():
+	job=q.enqueue('twitter.get_tweets()')
+
+	# Wait for while the tweets are downloaded
+	while job.result == None:
+		pass
+
+	analyze_tweets(job.result)
+	
+	return None
+
+@app.route('/analyzing')
+def analyze_tweets(job_results):		        
+# Refomat tweets
+    tweets=twitter.reformat_tweets(job_results)
+
+	# Check for empty data frame
+    if tweets.empty == True:
+    	return redirect('/error')
+
+
+    # Clean tweets
+    tweets=twitter.clean_and_tokenize()
+
+    app.vars['num_of_tweets']=len(tweets)
+
+	# Perform topic modelling
+    tweets=twitter.manualModelling()
+
+    vectorized_tweets=twitter.vectorize_tweets()
+
+	matrix=vectorized_tweets['words_matrix']
+
+    feature_names=vectorized_tweets['feature_names']
+
+    LDA_model=twitter.fit_LDA(matrix)
+
+	twitter.LDA_top_words(LDA_model,feature_names)
+
+	return render_template('returnquery.html', query=app.vars['query'],
+		num_of_tweets=app.vars['num_of_tweets'],
+		table=twitter.top_words['words'].to_html(index=False, header=False))
+
+
+
 
 @app.route('/moreinsights', methods=["POST"])
 def more_insights():
