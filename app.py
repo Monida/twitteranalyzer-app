@@ -101,14 +101,13 @@ def background_worker():
 	return None
 
 @app.route('/analyzing')
-def analyze_tweets(job_results):		        
-# Refomat tweets
-    tweets=twitter.reformat_tweets(job_results)
+def analyze_tweets(job_results):
+	#Reformat tweets
+	tweets=twitter.reformat_tweets(job_results)
 
 	# Check for empty data frame
-    if tweets.empty == True:
-    	return redirect('/error')
-
+	if tweets.empty == True:
+		return redirect('/error')
 
     # Clean tweets
     tweets=twitter.clean_and_tokenize()
