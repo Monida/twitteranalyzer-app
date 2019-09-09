@@ -92,7 +92,7 @@ Sep 9 2019
 '''
 def background_worker():
 	job=q.enqueue('twitter.get_tweets()')
-	time.sleep(40)
+	time.sleep(120)
 	analyze_tweets(job.result)
 
 	return None
