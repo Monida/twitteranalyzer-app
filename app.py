@@ -109,21 +109,21 @@ def analyze_tweets(job_results):
 	if tweets.empty == True:
 		return redirect('/error')
 
-    # Clean tweets
-    tweets=twitter.clean_and_tokenize()
+	# Clean tweets
+	tweets=twitter.clean_and_tokenize()
 
-    app.vars['num_of_tweets']=len(tweets)
+	app.vars['num_of_tweets']=len(tweets)
 
 	# Perform topic modelling
-    tweets=twitter.manualModelling()
+	tweets=twitter.manualModelling()
 
-    vectorized_tweets=twitter.vectorize_tweets()
+	vectorized_tweets=twitter.vectorize_tweets()
 
 	matrix=vectorized_tweets['words_matrix']
 
-    feature_names=vectorized_tweets['feature_names']
+	feature_names=vectorized_tweets['feature_names']
 
-    LDA_model=twitter.fit_LDA(matrix)
+	LDA_model=twitter.fit_LDA(matrix)
 
 	twitter.LDA_top_words(LDA_model,feature_names)
 
