@@ -38,11 +38,11 @@ def return_query():
 	        
 		        # Send task to background worker
 		        job=q.enqueue('twitter.get_tweets()')
-	 		
-			if job.result==None:
-				status='Not finished'
-			elif job.result!=None:
-				status='Finished'
+
+		        if job.result==None:
+		        	status='Not finished'
+		        elif job.result!=None:
+		        	status='Finished'
 
 		        #queued_jobs=q.jobs
 
