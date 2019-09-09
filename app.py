@@ -5,7 +5,7 @@ import os
 import base64
 from rq import Queue
 from worker import conn
-
+from redis import Redis
 
 q= Queue('low',connection = conn)
 
@@ -37,14 +37,19 @@ def return_query():
 	        	twitter.query=app.vars['query']
 	        
 		        # Send task to background worker
-		        results=q.enqueue('twitter.get_tweets()')
-	
+		        job=q.enqueue('twitter.get_tweets()')
+	 		
+			if job.result==None:
+				status='Not finished'
+			elif job.result!=None:
+				status='Finished'
+
 		        #queued_jobs=q.jobs
 
 	        	#data=queued_jobs[0]
 
 		        # Refomat tweets
-		        tweets=twitter.reformat_tweets(results)
+		        tweets=twitter.reformat_tweets(status)
 
 	        	# Check for empty data frame
 		        if tweets.empty == True:
