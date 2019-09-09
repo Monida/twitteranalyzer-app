@@ -40,7 +40,7 @@ def return_query():
 		        job=q.enqueue('twitter.get_tweets()')
 
 		        if job.result==None:
-				print('Not finished')
+					print('Not finished')
 		        	status='Not finished'
 		        elif job.result!=None:
 		        	status='Finished'
