@@ -28,8 +28,8 @@ import io
 from PIL import Image
 import os.path
 nltk.download('stopwords')
-#import matplotlib.pyplot as plt
-#from matplotlib.ticker import FuncFormatter
+import matplotlib.pyplot as plt
+from matplotlib.ticker import FuncFormatter
 
 #---------------------------------------------------------------------------------
 # Functions to get the tweets
@@ -475,7 +475,7 @@ class Twitter:
 
         return self.top_words
 
-'''
+
     def polarity_plot(self,topic):
     # Figure returning inpired by:
     # https://technovechno.com/creating-graphs-in-python-using-matplotlib-flask-framework-pythonanywhere/
@@ -512,8 +512,7 @@ class Twitter:
 
         return 'data:image/png;base64,{}'.format(figure_url)
 
-'''
-'''
+
     def objectivity_plot(self,topic):
 
         objectivities=self.tweets[self.tweets['topic_1']==topic]
@@ -547,11 +546,7 @@ class Twitter:
         plt.close()
 
         return 'data:image/png;base64,{}'.format(figure_url)
- '''   
-    
 
-    
-'''
     def create_wordcloud(self,tokenized_text):
     #This function takes a tokenized text and returns the WordCloud plot
         #Create frequency distribution from tokenized text
@@ -573,8 +568,7 @@ class Twitter:
         figure_url = base64.b64encode(img.getvalue()).decode()
         plt.close()
         return 'data:image/png;base64,{}'.format(figure_url)
-'''
-'''
+
 
     # Inspired by Natural Language Process Recipes, Akshay Kulkarni & Adarsha Shivananda, 2019.
     def create_clustergram(self,top_topics):
@@ -628,7 +622,7 @@ class Twitter:
         self.clustergram='data:image/png;base64,{}'.format(figure_url)
 
         return self.clustergram
-'''
+
 
 
 

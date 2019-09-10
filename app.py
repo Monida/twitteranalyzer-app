@@ -72,28 +72,24 @@ Sep 9 2019
 
 	        	twitter.LDA_top_words(LDA_model,feature_names)
 
-	        	return render_template('returnquery.html', query=app.vars['query'],
+
+	        	# Plot clustergram
+
+		        twitter.top_labeled_topics()
+		        clusters_data=twitter.cluster_text()
+		        twitter.create_clustergram(twitter.topics)
+
+
+		        
+		        return render_template('returnquery.html', query=app.vars['query'], 
 					num_of_tweets=app.vars['num_of_tweets'],
-					table=twitter.top_words['words'].to_html(index=False, header=False))
+					table=twitter.top_words['words'].to_html(index=False, header=False), 
+					clustergram=twitter.clustergram)
 '''
-	             
-	        # Plot clustergram
-'''
-	        twitter.top_labeled_topics()
-	        clusters_data=twitter.cluster_text()
-	        twitter.create_clustergram(twitter.topics)
 
-
-	        
-	        return render_template('returnquery.html', query=app.vars['query'], 
-				num_of_tweets=app.vars['num_of_tweets'],
-				table=twitter.top_words['words'].to_html(index=False, header=False), 
-				clustergram=twitter.clustergram)
-'''
 def background_worker():
 	job=q.enqueue('twitter.get_tweets()')
-	time.sleep(120)
-	analyze_tweets(job.result)
+	analyze_tweets(job)
 
 	return None
 
@@ -124,9 +120,16 @@ def analyze_tweets(job_results):
 
 	twitter.LDA_top_words(LDA_model,feature_names)
 
-	return render_template('returnquery.html', query=app.vars['query'],
+	# Plot clustergram
+
+    twitter.top_labeled_topics()
+    clusters_data=twitter.cluster_text()
+    twitter.create_clustergram(twitter.topics)
+    
+    return render_template('returnquery.html', query=app.vars['query'], 
 		num_of_tweets=app.vars['num_of_tweets'],
-		table=twitter.top_words['words'].to_html(index=False, header=False))
+		table=twitter.top_words['words'].to_html(index=False, header=False), 
+		clustergram=twitter.clustergram)
 
 
 
@@ -151,12 +154,7 @@ def more_insights():
 		tweets_per_topic = twitter.topics['Count'][4]
 		selected_topic = twitter.topics.index[4]
 
-
-	return render_template('moreinsights.html',num_of_tweets=app.vars['num_of_tweets'],num_of_tweets_per_topic=tweets_per_topic, topic=selected_topic)
-
-
 	# Plot WordCloud
-'''
 	LOW = twitter.create_LOW(selected_topic)
 	fig1 = twitter.create_wordcloud(LOW)
 
@@ -169,7 +167,7 @@ def more_insights():
 	return render_template('moreinsights.html',num_of_tweets=app.vars['num_of_tweets'], 
 		num_of_tweets_per_topic=tweets_per_topic, topic=selected_topic,wordcloud=fig1,
 		polarity=fig2, objectivity=fig3)
-'''
+
 	
 @app.route('/error',methods=["GET","POST"])
 def error():
