@@ -119,14 +119,12 @@ def analyze_tweets(job_results):
 	LDA_model=twitter.fit_LDA(matrix)
 
 	twitter.LDA_top_words(LDA_model,feature_names)
-
 	# Plot clustergram
+	twitter.top_labeled_topics()
+	clusters_data=twitter.cluster_text(
+	twitter.create_clustergram(twitter.topics)
 
-    twitter.top_labeled_topics()
-    clusters_data=twitter.cluster_text()
-    twitter.create_clustergram(twitter.topics)
-    
-    return render_template('returnquery.html', query=app.vars['query'], 
+	return render_template('returnquery.html', query=app.vars['query'],
 		num_of_tweets=app.vars['num_of_tweets'],
 		table=twitter.top_words['words'].to_html(index=False, header=False), 
 		clustergram=twitter.clustergram)
