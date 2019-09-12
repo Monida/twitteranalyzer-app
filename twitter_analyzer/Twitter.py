@@ -27,8 +27,8 @@ import base64
 import io
 from PIL import Image
 import os.path
-nltk.download('stopwords')
-nltk.download('punkt')
+# nltk.download('stopwords')
+# nltk.download('punkt')
 import matplotlib.pyplot as plt
 from matplotlib.ticker import FuncFormatter
 
