@@ -1,6 +1,13 @@
 <!doctype html>
 <title>TwitterAnalyzer</title>
 <link rel=stylesheet type=text/css href='{{ url_for('static',filename='style.css')}}'>
+<style>
+  input[type=submit]{background-color: #03cea4;
+                     border: none;
+                     color: white;
+                     cursor: pointer;
+                     padding: 3px 6px;}
+</style>
 <div class=page>
 	<section id="resultsummary">
   		<h1>Search word: {{query}}</h1>
@@ -9,6 +16,9 @@
    		<p>
   			Please wait a moment, your query is being analyzed.
   		</p>
+  		<form id="analyzingform" method= "POST" action="show_analysis">
+    		<input type="submit" value="Refresh">
+		</form>
   	</section>
 
 </div>

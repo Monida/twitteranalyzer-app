@@ -28,6 +28,7 @@ import io
 from PIL import Image
 import os.path
 nltk.download('stopwords')
+nltk.download('punkt')
 import matplotlib.pyplot as plt
 from matplotlib.ticker import FuncFormatter
 
@@ -59,13 +60,15 @@ class Twitter:
     # This function was inspired from: http://www.hristogueorguiev.com/
     # basic-twitter-data-miner-and-data-analysis-python-twython-twitter-api-pandas-matplotlib/
     # The get_tweets function is based on the Standard search API form Twitter
-    def get_tweets(self, pagestocollect = 20):
+    def get_tweets(self, query='', pagestocollect = 20):
 
         # AUTHENTICATE
         twitter_obj = Twython(self.creds['CONSUMER_KEY'], self.creds['CONSUMER_SECRET'],  
                             self.creds['ACCESS_TOKEN'], self.creds['ACCESS_TOKEN_SECRET'])
+        if query=='':
+            query=self.query
     
-        results = twitter_obj.search(q=self.query, include_entities='true',
+        results = twitter_obj.search(q=query, include_entities='true',
                                  tweet_mode='extended',count='100',
                                  result_type='recent',lang='en')
     
@@ -85,7 +88,7 @@ class Twitter:
             
             mid= results['statuses'][len(results['statuses']) -1]['id']-1
     
-            results = twitter_obj.search(q=self.query, max_id=str(mid)
+            results = twitter_obj.search(q=query, max_id=str(mid)
                                  ,include_entities='true',
                                  tweet_mode='extended',count='100',
                                  result_type='recent',lang='en')
