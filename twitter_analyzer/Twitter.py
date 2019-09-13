@@ -43,6 +43,7 @@ class Twitter:
         self.creds=self.get_creds()
         self.my_stopwords=self.get_stop_words()
         self.topics=pd.DataFrame()
+        self.num_of_tweets=0
     
     def get_stop_words(self):
         # Set stopwords
@@ -574,7 +575,7 @@ class Twitter:
 
 
     # Inspired by Natural Language Process Recipes, Akshay Kulkarni & Adarsha Shivananda, 2019.
-    def create_clustergram(self,top_topics):
+    def create_clustergram(self):
         similarity_distance = 1 - cosine_similarity(self.tfidf_matrix)
         # Convert two components as we're plotting points in a two-dimensional plane
         mds = MDS(n_components=2, dissimilarity="precomputed",random_state=1)
