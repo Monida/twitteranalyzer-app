@@ -1,2 +1,2 @@
 redisweb: gunicorn app:app --log-file=-
-worker: python worker.py
+worker: gunicorn worker.py
