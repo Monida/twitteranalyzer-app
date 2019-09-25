@@ -16,6 +16,10 @@
   		<p>
   			<h2>Top topics</h2><br>
 
+          {{topics_table|safe}} 
+
+        <h2>Top words</h2><br>
+
         <p>Click on topic for more insights.</p>
   			<table>
           <tr>
@@ -29,7 +33,7 @@
                 <tr><td><input type="submit" name="insights" value="topic 5" class="topic"></td></tr>  
               </table>
                 <td>
-                {{table|safe}} 
+                {{topwords_table|safe}} 
                 </td>  
             </form>
             </td>
