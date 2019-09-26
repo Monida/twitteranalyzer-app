@@ -19,14 +19,15 @@
   		<p id="demo"></p>
 
 		<script>
+			// Code inspired from: https://www.w3schools.com/howto/tryit.asp?filename=tryhow_js_countdown 
 			// Set the date we're counting down to
 			var d = new Date();
 			var year = d.getFullYear()+1;
 			var month = d.getMonth();
 			var day = d.getDay();
 			var hour = d.getHours();
-			var minute = d.getMinutes()+3;
-			var second = d.getSeconds();
+			var minute = d.getMinutes();
+			var second = d.getSeconds()+60;
 			var countDownDate = new
 
 			Date(year,month,day,hour,minute,second).getTime();
@@ -49,14 +50,15 @@
 			  document.getElementById("demo").innerHTML = minutes + "m " + seconds + "s ";
 			    
 			  // If the count down is over, write some text 
-			  if (distance < 0) {
+			  if (seconds == 0) {
 			    clearInterval(x);
-			    document.getElementById("demo").innerHTML = "EXPIRED";
+			    document.getElementById("demo").innerHTML = "EXPIRED"
+			    document.getElementById("Refresh")[0].submit()
 			  }
 			}, 1000);
 		</script>
   		<form id="analyzingform" method= "POST" action="show_analysis">
-    		<input type="submit" value="Refresh">
+    		<input id="Refresh" type="submit" value="Refresh">
 		</form>
   	</section>
 
