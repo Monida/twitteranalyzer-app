@@ -57,11 +57,13 @@ class Twitter:
             creds=json.load(file)
         return creds
 
-    # Mine tweets from twitter
-    # This function was inspired from: http://www.hristogueorguiev.com/
-    # basic-twitter-data-miner-and-data-analysis-python-twython-twitter-api-pandas-matplotlib/
-    # The get_tweets function is based on the Standard search API form Twitter
+    
     def get_tweets(self, query='', pagestocollect = 20):
+        # This method downloads the tweets from twitter and returns a list of dictionaries
+        # each representing a tweet.
+        # This function was inspired from: http://www.hristogueorguiev.com/
+        # basic-twitter-data-miner-and-data-analysis-python-twython-twitter-api-pandas-matplotlib/
+        # The get_tweets function is based on the Standard search API form Twitter
 
         # AUTHENTICATE
         twitter_obj = Twython(self.creds['CONSUMER_KEY'], self.creds['CONSUMER_SECRET'],  
@@ -102,8 +104,9 @@ class Twitter:
     
 
     def reformat_tweets(self,data):
+        # This method reformat the data as DataFrame format
+        # data: a list of dictionaries, each representinga  tweet, returned by the get_tweets() method
         
-        #Reformat data as DataFrame format
         text=[]
         date=[]
         location=[]
@@ -197,7 +200,7 @@ class Twitter:
         return corr_s.correct()
         
     # Cleaning master function
-    def clean_tweet_mtr(self,tweet, bigrams=False):
+    def clean_tweet_mtr(self,tweet, bigrams=False:
     # tweet: a string that contains the text of the tweet
         tweet = self.remove_user(tweet)
         tweet = self.remove_urls(tweet)
@@ -247,7 +250,7 @@ class Twitter:
 #---------------------------------------------------------------------------------
         
     def clean_and_tokenize(self):
-        # Clean and tokenize the tweets
+        # This method cleans and tokenizes the tweets that the reformat_tweets() method returns
         self.tweets['clean_text']=self.tweets['text'].apply(self.clean_tweet_mtr)
         
         # Drop all the tweets that after cleaning are left with an empty string
@@ -264,7 +267,8 @@ class Twitter:
 
 
     def manualModelling(self):
-        # Manually classify the topic
+        # Manually classify the topic using a dictionary where the keys are the topics and the 
+        # values are the related words.
         topics=pd.read_csv('static/keyword_list.csv',sep=',')
         
         # Transform topics dataframe into a dictionary
@@ -301,7 +305,7 @@ class Twitter:
 
     def assign_topic(self,token_list,topic_dict,n_highest=1):
     # This function takes a list of tokens and asign them with a topic from a given 
-    # dictionary. Returns a list of assigned topic and matching percentage 
+    # dictionary. Returns a list of one assigned topic and the corresponding matching percentage 
         percentage_match_dict={}
         
         for topic in topic_dict.keys():
@@ -360,7 +364,7 @@ class Twitter:
 
     # Inspired by: https://ourcodingclub.github.io/2018/12/10/topic-modelling-python.html#apply
     def vectorize_tweets(self):
-        # the vectorizer object will be used to transform text to vector form
+        # The vectorizer object will be used to transform text to vector form
         vectorizer = CountVectorizer(max_df=0.9, min_df=15, token_pattern='\w+|\$[\d\.]+|\S+')
 
         # apply transformation

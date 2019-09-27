@@ -7,9 +7,12 @@ def run_analysis(twitter_obj):
     tweets = twitter_obj.clean_and_tokenize()
     twitter_obj.num_of_tweets = len(tweets)
 
-    # Perform topic modeling
+    # Perform manual topic modeling
 
     tweets = twitter_obj.manualModelling()
+
+    # Perform LDA topic modeling
+
     vectorized_tweets = twitter_obj.vectorize_tweets()
     matrix = vectorized_tweets['words_matrix']
     feature_names = vectorized_tweets['feature_names']
@@ -21,4 +24,5 @@ def run_analysis(twitter_obj):
     twitter_obj.top_labeled_topics()
     clusters_data = twitter_obj.cluster_text()
     twitter_obj.create_clustergram()
+    
     return twitter_obj
