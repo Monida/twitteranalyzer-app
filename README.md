@@ -47,12 +47,20 @@ Once the dictionary is ready, the topic to each tweet is assigned according to w
 
 The Latent Dirichlet Allocation Algorightm (LDA), assigns topics authomatically. Each topic is represented by the top N words of that topic. 
 
+To apply LDA we need to follow 3 steps:
+
+1) Words to Matrix: Using the [CountVectorizer()](link:https://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.CountVectorizer.html) method of the Sci-Kit Learn Library, we transformed all the tweets into a matrix where each row is a tweet, each column is a word in the tweets corpora, and each matrix entry **ij** is a one or a zero depending on the presence of the word of the jth column being on the tweet of the ith row.
+2) The matrix created in the previous step is the input of the [LDA model](link:https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.LatentDirichletAllocation.html) also from Sci-Kit learn.
+3) From the LDA model we can extract the top N words that represent each topic. 
 
 #### **1.5.3. Clustering**
 
+
 ### **1.6. Sentiment Analysis and Polarity**
 
+
 ### **1.7. Word cloud**
+
 
 ### **1.8. Background workers**
 When there are some lengthy processes in a Heroku app (like downloading tweets or running analysis on them), it is necesary to perform these processes asynchronously from the main running time to make the use of the app more efficient. Furthermore, if these lengthy tasks take more than 30 seconds the Heroku server will return a timeout error making the app to crash. 
@@ -107,7 +115,7 @@ Therefore, if a taks takes more than 30 seconds to run, something called "backgr
       
     * **keyword_list:** One of the functions of the TwitterAnalyzer is to find the topics that are being discussed and label them. So far it does that by comparing the most frecuent words to the list of words (values) corresponding for each keyword (key) of the dictionary.
 
-    * **twitter_nlp.png:** This is the home page image
+    * **twitter_nlp.png:** This is the home page image.
   
   * **templates/:** This folder holds all the html templates, whic gives the structure to each page. 
 
