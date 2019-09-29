@@ -3,10 +3,9 @@
 <img src="static/twitter_nlp.png">
 
 
-**-------------------------------------------------FILE UNDER CONSTRUCTION------------------------------------------------------**
 
 
-This repository contains all the files of the [TwitterAnalyzer](link:https://twitteranalyzer-app.herokuapp.com/) Web-app.
+This repository contains all the files of the [TwitterAnalyzer Web-app](link:https://twitteranalyzer-app.herokuapp.com/).
 
 Below you can find the description of the content of this repository. 
 
@@ -18,7 +17,7 @@ The TwitterAnalyzer App is a Wep App where the user can enter a search word (que
 
 ### **1.2. Tweets live streaming**
 
-The App uses [Twython](link:https://twython.readthedocs.io/en/latest/) to live stream a sample of tweets written in English, that people have posted during the past 7 days (according to the Twitter API policy for the [Standard API](link:https://developer.twitter.com/en/pricing.html). 
+The App uses [Twython](link:https://twython.readthedocs.io/en/latest/) to live stream a sample of tweets written in English, that people have posted during the past 7 days (according to the Twitter API policy for the [Standard API](link:https://developer.twitter.com/en/pricing.html)). 
 
 ### **1.3. Twitter data reformatting**
 The [search()](link:https://twython.readthedocs.io/en/latest/usage/basic_usage.html) method of the Twython objet returns a list of dictionaries, each representing a tweet. I transformed this list into a data frame and removing "useless" tweets. 
@@ -38,12 +37,12 @@ Topic modeling is an aplication of NLP where some texts, in this case tweets, ar
 
 I used three different topic modeling techniques: dictionary-based, LDA and clustering. 
 
-#### **1.5.1. Dictionary-based**
+#### **1.5.1. Dictionary-based topic modeling**
 Dictionary-based topic modeling is the simplest way of topic modeling but it requires a lot of manual work to find the topics from a sample of docs and then lable them. Each found topic becomes a key of the dictionary and the related words become the values. The dictionary could also be scrapped from the internet to make it more sofisticated (yet, another thing I have to improve).
 
 Once the dictionary is ready, the topic to each tweet is assigned according to what related words match best the bag of words representing each tweet. 
 
-#### **1.5.2. LDA**
+#### **1.5.2. LDA topic modeling**
 
 The Latent Dirichlet Allocation Algorightm (LDA), assigns topics authomatically. Each topic is represented by the top N words of that topic. 
 
@@ -52,20 +51,28 @@ To apply LDA we need to follow 3 steps:
 1) Words to Matrix: Using the [CountVectorizer()](link:https://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.CountVectorizer.html) method of the Sci-Kit Learn Library, we transformed all the tweets into a matrix where each row is a tweet, each column is a word in the tweets corpora, and each matrix entry **ij** is a one or a zero depending on the presence of the word of the jth column being on the tweet of the ith row.
 2) The matrix created in the previous step is the input of the [LDA model](link:https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.LatentDirichletAllocation.html) also from Sci-Kit learn.
 3) From the LDA model we can extract the top N words that represent each topic. 
+   
+To learn more about how the LDA algorithm works, you can go to this very instructive [video](link:https://www.youtube.com/watch?v=NYkbqzTlW3w), or read this [paper](link:http://www.jmlr.org/papers/volume3/blei03a/blei03a.pdf), which is actually the paper where David M. Blei proposed it for the first time. 
 
 #### **1.5.3. Clustering**
 
+Clustering is an unsupervised (without need for labels) technique whose objective is to group words together, depending on their similiarity. 
+
+This [video](link:https://www.youtube.com/watch?v=4b5d3muPQmA) contains a graphical description of K-means clustering.
 
 ### **1.6. Sentiment Analysis and Polarity**
+After identifying the different topics, the user can select any of them and go deeper into each topic to learn whether the tweets in that topic are positive or negative, or whether they are objective or subjective. This is called Sentiment (or Polarity) and Subjectivity Analysis respectively. 
 
+Sentiment and Subjectivity analysis are done using the [TextBlob library](link:https://textblob.readthedocs.io/en/dev/#). TextBlob finds the polarity and subjectivity value for all the words of each tweet from the polarity and subjetctivity [lexicon](link:https://github.com/sloria/TextBlob/blob/eb08c120d364e908646731d60b4e4c6c1712ff63/textblob/en/en-sentiment.xml). Then it averages the values of all the words to give an overall sentence polarity or subjectivity value. This [link](link:https://planspace.org/20150607-textblob_sentiment/) describes very clearly how this is done.
 
 ### **1.7. Word cloud**
-
+Another thing you can look at in the app after selecting a topic is the word cloud, which is a graphical representation of the frequency of the most common words of that topics. Basically the more frequent words are larger and the less frequent words are smaller. This is done using the [wordcloud](link:https://github.com/amueller/word_cloud) library.
 
 ### **1.8. Background workers**
-When there are some lengthy processes in a Heroku app (like downloading tweets or running analysis on them), it is necesary to perform these processes asynchronously from the main running time to make the use of the app more efficient. Furthermore, if these lengthy tasks take more than 30 seconds the Heroku server will return a timeout error making the app to crash. 
+When there are some lengthy processes in a Heroku app (like downloading tweets or running analysis on them), it is necessary to perform these processes asynchronously from the main running time, to make the use of the app more efficient. Furthermore, if these lengthy tasks take more than 30 seconds the Heroku server will return a timeout error making the app to crash. 
 
-Therefore, if a taks takes more than 30 seconds to run, something called "background worker" needs to be implemented. A background worker is a function that handles all this lengthy tasks. We need to use the [RQ library](link:http://python-rq.org/) and the [Redis server](https://redislabs.com/lp/python-redis/) for Python. The RQ library is a Python library that allows you to enqueue the lengthly tasks. Once a task is enqueued, the worker will handle it by sending it to the Redis server to be run asynchronously in the background.  If you want to learn how this is implemented follow this link: https://devcenter.heroku.com/articles/python-rq. 
+Therefore, if a taks takes more than 30 seconds to run, something called "background worker" needs to be implemented. A background worker is a function that handles all this lengthy tasks. To do so, 
+we need to use the [RQ library](link:http://python-rq.org/) and the [Redis server](https://redislabs.com/lp/python-redis/) for Python. The RQ library is a Python library that allows you to enqueue the lengthly tasks. Once a task is enqueued, the worker will handle it by sending it to the Redis server to be run asynchronously in the background.  If you want to learn how this is implemented follow this [link](link:https://devcenter.heroku.com/articles/python-rq). 
 
 ## **2. App structure**
 ### **2.1 Project folders tree structure**
