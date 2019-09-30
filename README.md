@@ -2,79 +2,85 @@
 
 <img src="static/twitter_nlp.png">
 
-
-
-
 This repository contains all the files of the [TwitterAnalyzer Web-app](link:https://twitteranalyzer-app.herokuapp.com/).
 
-Below you can find the description of the content of this repository. 
+Below you can find the description of the content of this repository as well as some links to understand the app's features. 
 
 
 ## **1. Description**
 ### **1.1. The app**
 
-The TwitterAnalyzer App is a Wep App where the user can enter a search word (query) to learn what people are tweeting about in relation to that query. 
+The TwitterAnalyzer App is a Web App where the user can enter a search word to learn what people are tweeting about that query. The app uses Natural Language Processing (NLP) techniques to analyze the text of the tweets and come up with meaningful insights. 
+
+The app was built on the [Flask](link:https://flask.palletsprojects.com/en/1.1.x/) web framework and deployed to [Heroku](link:https://www.heroku.com/). 
 
 ### **1.2. Tweets live streaming**
 
-The App uses [Twython](link:https://twython.readthedocs.io/en/latest/) to live stream a sample of tweets written in English, that people have posted during the past 7 days (according to the Twitter API policy for the [Standard API](link:https://developer.twitter.com/en/pricing.html)). 
+The App uses [Twython](link:https://twython.readthedocs.io/en/latest/) to live stream a sample of tweets written in English that people have posted during the 7 days previous to the search, which is the allowed search time frame of the [Standard Twitter API](link:https://developer.twitter.com/en/pricing.html). 
 
 ### **1.3. Twitter data reformatting**
-The [search()](link:https://twython.readthedocs.io/en/latest/usage/basic_usage.html) method of the Twython objet returns a list of dictionaries, each representing a tweet. I transformed this list into a data frame and removing "useless" tweets. 
+The [search()](link:https://twython.readthedocs.io/en/latest/usage/basic_usage.html) method of the Twython object returns a list of dictionaries, each representing a tweet. I then transformed this list into a data frame and removed "useless" tweets. 
 
-The "useless" tweets are the ones with links to websites or images, tweets written in languages other than English, and duplicates. I do this with a combination of Pandas methods and regular expressions. 
+The "useless" tweets are the ones with links to websites or images, tweets written in languages other than English and duplicates. I do this with a combination of [Pandas](link:https://pandas.pydata.org/) methods and [regular expressions](link:https://regexone.com/). 
 
-The reason for removing tweets with links is that usually one can understand the tweet by only reading the text. Some sort of interpretation of the relationship between the tweet's text and the link need to be done. Therfore, To be able to interpret the meaning of those tweets, a mixed model of NLP and Computer Vision is needed. Something I hope I could try later on, but for now, I just stick with the only-text tweets. 
+The reason for removing tweets with links is that usually, one cannot understand those tweets by reading the text alone. Some sort of interpretation of the relationship between the tweet's text and the link is necessary. Therefore, to be able to interpret the meaning of those tweets, a mixed model of NLP and Computer Vision has to be used. Something I hope I could try later on, but for now, I just sticked to the only-text tweets. 
 
 ### **1.4. Clean and tokenize**
-For the remaining tweets I use regular expressions to remove all user names, urls, punctuation, numbers, special characters including emojis (emoji analysis is another feature I will add later on), hashtags (just the symbol) and double spaces. I also turn all words into lower cases.
+For the remaining tweets, I use regular expressions to remove all user names, URLs, punctuation, numbers, special characters including emojis (emoji analysis is another feature I will add later on), hashtags symbols and double spaces. I also turn all words into lower cases.
 
-Then with the TweetTokenizer() class from the NLTK library I tokenize all words of the clean tweets' texts.
+Then with the [TweetTokenizer()](link:https://www.nltk.org/api/nltk.tokenize.html) class from the [NLTK library](link:https://www.nltk.org/), I tokenized all words of the clean tweets' texts to create the [bag of words](link:https://en.wikipedia.org/wiki/Bag-of-words_model) model of each tweet.
 
 ### **1.5. Topic Modeling**
 
-Topic modeling is an aplication of NLP where some texts, in this case tweets, are analyzed to group the information into different topics.
+Topic modeling is an application of NLP where some texts, in this case tweets, are analyzed to group the information into different topics.
 
 I used three different topic modeling techniques: dictionary-based, LDA and clustering. 
 
 #### **1.5.1. Dictionary-based topic modeling**
-Dictionary-based topic modeling is the simplest way of topic modeling but it requires a lot of manual work to find the topics from a sample of docs and then lable them. Each found topic becomes a key of the dictionary and the related words become the values. The dictionary could also be scrapped from the internet to make it more sofisticated (yet, another thing I have to improve).
+Usually, the result of topic modeling is a list of top N words that represent the different topics. Then, human interpretation is needed to analyze those top N words and come up with a label for each topic. Dictionary-based topic modeling allows you to have predefined topic labels to make the top N words more easily interpretable. 
 
-Once the dictionary is ready, the topic to each tweet is assigned according to what related words match best the bag of words representing each tweet. 
+Dictionary-based topic modeling is the simplest way of labeled topic modeling but it requires a lot of manual work to find the topics from a sample of docs and then label them. Each found topic becomes a key of the dictionary and the related words become the values. For this app, once I have the dictionary manually created, the topic of each tweet is assigned according to what related words in the dictionary best match the bag of words representing each tweet. 
+
+The dictionary could also be scrapped from the internet to make the labeling more automatic and sophisticated (yet, another thing I can do to improve the app). These papers [1,2] suggest a interesting way to do it. 
 
 #### **1.5.2. LDA topic modeling**
 
-The Latent Dirichlet Allocation Algorightm (LDA), assigns topics authomatically. Each topic is represented by the top N words of that topic. 
+The Latent Dirichlet Allocation Algorithm (LDA), assigns topics automatically. Each topic is represented by the top N words of that topic. 
 
 To apply LDA we need to follow 3 steps:
 
-1) Words to Matrix: Using the [CountVectorizer()](link:https://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.CountVectorizer.html) method of the Sci-Kit Learn Library, we transformed all the tweets into a matrix where each row is a tweet, each column is a word in the tweets corpora, and each matrix entry **ij** is a one or a zero depending on the presence of the word of the jth column being on the tweet of the ith row.
-2) The matrix created in the previous step is the input of the [LDA model](link:https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.LatentDirichletAllocation.html) also from Sci-Kit learn.
-3) From the LDA model we can extract the top N words that represent each topic. 
+1) Words to Matrix: Using the [CountVectorizer()](link:https://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.CountVectorizer.html) class of the [Scikit-learn Library](link:https://scikit-learn.org/stable/index.html), we transform all the tweets into a matrix where each row is a tweet, each column is a word in the tweets corpora after removing stop words, and each **ijth** entry is the number of times the jth word appears in the ith tweet.
+2) The matrix created in the previous step is the input of the [LDA model](link:https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.LatentDirichletAllocation.html) also from Scikit-learn.
+3) From the LDA model, we can extract the top N words that represent each topic. 
    
-To learn more about how the LDA algorithm works, you can go to this very instructive [video](link:https://www.youtube.com/watch?v=NYkbqzTlW3w), or read this [paper](link:http://www.jmlr.org/papers/volume3/blei03a/blei03a.pdf), which is actually the paper where David M. Blei proposed it for the first time. 
+To learn more about how the LDA algorithm works, you can go to this very instructive [video](link:https://www.youtube.com/watch?v=NYkbqzTlW3w), or read this [paper](link:http://www.jmlr.org/papers/volume3/blei03a/blei03a.pdf), which is the paper where David M. Blei proposed it for the first time. 
 
 #### **1.5.3. Clustering**
 
-Clustering is an unsupervised (without need for labels) technique whose objective is to group words together, depending on their similiarity. 
+Clustering is an unsupervised (without need for labels) technique whose objective is to group words, depending on their similarity. Grouping words according to their similarity is another way to finding the top N words of each relevant topic whithin the teets corpus.  
 
-This [video](link:https://www.youtube.com/watch?v=4b5d3muPQmA) contains a graphical description of K-means clustering.
+To implement clustering 3 steps are necessary:
+
+1) TF-IDF: term frequency-inverse document frequency is a way to represent the frequency of words in each tweet, but penalizing for those words that are too common to bring value to the document (like the's and of's). The result of TF-IDF transformation is a matrix where the rows are the tweets and the columns are words (the remaining words after removing stop words) and the **ijth** entry represents the TF-IDF value of jth word for the ith tweet. Follow this [link](link:https://www.youtube.com/watch?v=4vT4fzjkGCQ) for a more thorough explanation of TF-IDF. I used [TfidfVectorizer()](link:https://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.TfidfVectorizer.html) from Scikit-learn to implement this section.
+2) K-means clustering: the TF-IDF matrix becomes the input to the K-means clustering algorithm, which I implemented using [KMeans()](link:https://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html), also from Scikit-learn. This algorithm consists of grouping words around some given K centroids, by finding the closest centroid to each word through an iterative process. This [video](link:https://www.youtube.com/watch?v=4b5d3muPQmA) contains a graphical description of K-means clustering.
+3) Represent clusters in 2 dimensions: The clustering algorithm uses words transformed into vectors in high-dimensional spaces. Using the [MDS multidimensional scaling class](link:https://scikit-learn.org/stable/modules/generated/sklearn.manifold.MDS.html) and the [cosine_similarity](link:https://scikit-learn.org/stable/modules/generated/sklearn.metrics.pairwise.cosine_similarity.html) from Scikit-learn, inspired by [3], we can find the "similarity-distance" between the data points (tweets in vector format) to be able to represent them in 2 dimensions. You can read the [MDS user guide](link:https://scikit-learn.org/stable/modules/manifold.html#multidimensional-scaling) to better understand how this is done. 
 
 ### **1.6. Sentiment Analysis and Polarity**
 After identifying the different topics, the user can select any of them and go deeper into each topic to learn whether the tweets in that topic are positive or negative, or whether they are objective or subjective. This is called Sentiment (or Polarity) and Subjectivity Analysis respectively. 
 
-Sentiment and Subjectivity analysis are done using the [TextBlob library](link:https://textblob.readthedocs.io/en/dev/#). TextBlob finds the polarity and subjectivity value for all the words of each tweet from the polarity and subjetctivity [lexicon](link:https://github.com/sloria/TextBlob/blob/eb08c120d364e908646731d60b4e4c6c1712ff63/textblob/en/en-sentiment.xml). Then it averages the values of all the words to give an overall sentence polarity or subjectivity value. This [link](link:https://planspace.org/20150607-textblob_sentiment/) describes very clearly how this is done.
+Sentiment and Subjectivity analysis is done using the [TextBlob library](link:https://textblob.readthedocs.io/en/dev/#). TextBlob finds the polarity and subjectivity value for all the words of each tweet from the polarity and subjectivity [lexicon](link:https://github.com/sloria/TextBlob/blob/eb08c120d364e908646731d60b4e4c6c1712ff63/textblob/en/en-sentiment.xml). Then it averages the values of all the words to give an overall sentence polarity or subjectivity value. This [link](link:https://planspace.org/20150607-textblob_sentiment/) describes very clearly how this is done.
 
 ### **1.7. Word cloud**
-Another thing you can look at in the app after selecting a topic is the word cloud, which is a graphical representation of the frequency of the most common words of that topics. Basically the more frequent words are larger and the less frequent words are smaller. This is done using the [wordcloud](link:https://github.com/amueller/word_cloud) library.
+Another thing you can look at in the app after selecting a topic is the word cloud, which is a graphical representation of the frequency of the most common words of that topic. Basically, the most frequent words are larger and the least frequent words are smaller. This is done using the [wordcloud](link:https://github.com/amueller/word_cloud) library.
 
 ### **1.8. Background workers**
 When there are some lengthy processes in a Heroku app (like downloading tweets or running analysis on them), it is necessary to perform these processes asynchronously from the main running time, to make the use of the app more efficient. Furthermore, if these lengthy tasks take more than 30 seconds the Heroku server will return a timeout error making the app to crash. 
 
-Therefore, if a taks takes more than 30 seconds to run, something called "background worker" needs to be implemented. A background worker is a function that handles all this lengthy tasks. To do so, 
-we need to use the [RQ library](link:http://python-rq.org/) and the [Redis server](https://redislabs.com/lp/python-redis/) for Python. The RQ library is a Python library that allows you to enqueue the lengthly tasks. Once a task is enqueued, the worker will handle it by sending it to the Redis server to be run asynchronously in the background.  If you want to learn how this is implemented follow this [link](link:https://devcenter.heroku.com/articles/python-rq). 
+Therefore, if a task takes more than 30 seconds to run, something called "background worker" needs to be implemented. A background worker is a function that handles all these lengthy tasks. To do so, 
+we need to use the [RQ library](link:http://python-rq.org/) and the [Redis server](https://redislabs.com/lp/python-redis/) for Python. The RQ library is a Python library that allows you to enqueue the lengthly tasks. Once a task is enqueued, the worker will handle it by sending it to the Redis server to be run asynchronously in the background.  If you want to learn how this is implemented, follow this [link](link:https://devcenter.heroku.com/articles/python-rq). 
 
 ## **2. App structure**
+This section focuses on explaining all the files needed to make the TwitterAnalyzer App work.
 ### **2.1 Project folders tree structure**
 
 ```bash
@@ -116,25 +122,25 @@ we need to use the [RQ library](link:http://python-rq.org/) and the [Redis serve
 
 * **twitteranalyzer-app:** This is the project folder. All files needed to run the app must be stored here. 
 
- * **static/:** This static folder contains all files needed by either the html files or the app itself to work.
+ * **static/:** This static folder contains all files needed by either the HTML files or the app itself to work.
   
-    * **style.css:** This file contains the CSS code that gives format to all the html templates.
+    * **style.css:** This file contains the CSS code that gives format to all the HTML templates.
       
-    * **keyword_list:** One of the functions of the TwitterAnalyzer is to find the topics that are being discussed and label them. So far it does that by comparing the most frecuent words to the list of words (values) corresponding for each keyword (key) of the dictionary.
+    * **keyword_list:** One of the functions of the TwitterAnalyzer App is to find the topics that are being discussed and label them. So far it does that by comparing the most frequent words to the list of words (values) corresponding for each keyword (key) of the dictionary.
 
     * **twitter_nlp.png:** This is the home page image.
   
-  * **templates/:** This folder holds all the html templates, whic gives the structure to each page. 
+  * **templates/:** This folder holds all the HTML templates which give the structure to each page. 
 
-    * **analyzing.html:** This file appears while the program downloads the tweets and analyze them to indicate the user that the data is being analyzed and the results will show up shortly.
+    * **analyzing.html:** This file appears while the program downloads the tweets and analyzes them to indicate to the user that the data is being analyzed and the results will show up shortly.
   
-     * **enterquery.html:** This file displays the instructions to use the twitteranalyzer-app. It also contains the form for the user to enter a query as well as a search button.
+     * **enterquery.html:** This file displays the instructions to use the twitteranalyzer-app. It also contains a form for the user to enter a query as well as a search button.
 
-     * **error.html:** This html file is showed when the app presents an error and provides the user with a corresponding message and/or instructions. (Not implemented yet)
+     * **error.html:** This HTML file is shown when the app presents an error and provides the user with a corresponding message and/or instructions. 
 
-     * **moreinsights:** This html is rendered when in the returnquery.html the user clicks on a specific topic to know more insights about it. 
+     * **moreinsights:** This HTML is rendered when in the returnquery.html the user clicks on a specific topic to know more insights about it. 
 
-     * **returnquery.html:** This is the main page that is shown after the program analyzes the tweets. It displays a summary about the tweets that were found.
+     * **returnquery.html:** This is the main page that is shown after the program analyzes the tweets. It displays a summary of the tweets that were found.
   
   * **twitter_analyzer/:** This folder holds the files of the twitter_analyzer package.
 
@@ -142,25 +148,30 @@ we need to use the [RQ library](link:http://python-rq.org/) and the [Redis serve
   
      * **__init__:** This file indicates that the directory twitter_analyzer is a python package.
   
-  * **venv/:** this folder contains all the information of the virtual environment where the Flask app was created. 
+  * **venv/:** This folder contains all the information of the virtual environment where the Flask app was created. 
   
   * **.gitignore:** This hidden text file contains the files and directories that are not tracked using git.
   
-  * **Procfile:** This is a file *with no extension* that contains the commands that need to be execuded during the app startup. Go to the following link to learn more about it: https://devcenter.heroku.com/articles/procfile.
+  * **Procfile:** This is a file *with no extension* that contains the commands that need to be executed during the app start-up. Go to the following [link](link:https://devcenter.heroku.com/articles/procfile) to learn more about it.
   
- * **Procfile.Windows:** This is also a file with no extension and just like Procfile it tells the app what code to run during start up, but it is an extra file needed when the app is built on Windows. 
+ * **Procfile.Windows:** This is also a file with no extension and just like Procfile it tells the app what code to run during start-up, but it is an extra file needed when the app is built on Windows. 
   
   * **README.md:** This file (the current file) contains the entire description of the twitteranalyzer-app project.
   
-  * **app.py:** This is the main script responsible for running the Flask app. This file is called by Procfile during the start up of the app.
+  * **app.py:** This is the main script responsible for running the Flask app. This file is called by Procfile during the start-up of the app.
    
-  * **nltk.txt:** This text file is necesary to deploy to Heroku an app that uses NLTK. It contains a refenrence to the corpora that needs to be downloaded for the app to work. During the app build up of the app, the corpora is downloaded and installed so that the app doesn't have to download it everytime someone uses the app. To learn more about how this is done go to the link: https://devcenter.heroku.com/articles/python-nltk.
+  * **nltk.txt:** This text file is necessary to deploy an app that uses NLTK to Heroku. It contains a reference to the corpora that needs to be downloaded for the app to work. During the app build-up, the corpora are downloaded and installed so that the app doesn't have to download it every time someone uses the app. To learn more about how this is done, go to this [link](link:https://devcenter.heroku.com/articles/python-nltk).
          
-  * **requirements.txt:** Heroku needs this requirements file to be able to install all the libraries that are necesary to be able to run the app. In this file you will find the name of the python libraries needed for the app to work such as pandas, matplotlib, nltk, etc.
+  * **requirements.txt:** Heroku needs this requirements file to be able to install all the libraries that are necessary to be able to run the app. In this file, you will find the name of the python libraries needed for the app to work such as Pandas, Matplotlib, NLTK, Scikit-learn, etc.
   
   * **run_analysis.py:** The Twitteranalyzer App performs some tasks that take a long time to run, such as downloading tweets and their analysis. All these lengthy tasks are listed inside this script so that they can be enqueued and sent to the *background worker*. Read section 1.8 to learn more about how this is done. 
   
   * **runtime.txt:** This file tells Heroku what version of python is needed.
     
-  * **worker.py:**   The worker file is the *background worker* function that "listens" to the lengthy tasks that are enqueued and handles them by sending them to the Redis server to be excecuted asynchronously. 
+  * **worker.py:**   The worker file is the *background worker* function that "listens" to the lengthy tasks that are enqueued and handles them by sending them to the Redis server to be executed asynchronously. 
 
+References:
+
+[1] J.H. Lau, K. Grieser, D. Newman, and T. Baldwin. "Automatic labelling of topic models". In Proceedings of the 49th Annual Meeting of the Association for Computational Linguistics: Human Language Technologies. Volume 1,  2011, pages 1536–1545. Association for Computational Linguistics.
+[2] S. Bhatia, J. H. Lau, and T. Baldwin, “Automatic labelling of topics with neural embeddings,” in 26th COLING International Conference on Computational Linguistics. 2016, pages 953–963.
+[3] A. Kulkarni, A. Shivananda. "Natural Language Processing Recipes". 2019, New York. Apress.

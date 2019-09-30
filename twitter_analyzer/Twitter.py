@@ -407,7 +407,7 @@ class Twitter:
         # Clustering using K-means
         num_clusters = 5
 
-        km = KMeans(n_clusters=num_clusters)
+        km = KMeans(n_clusters=num_clusters)#try init='k-means++'
         km.fit(self.tfidf_matrix)
 
         # final clusters
