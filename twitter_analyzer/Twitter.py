@@ -200,7 +200,7 @@ class Twitter:
         return corr_s.correct()
         
     # Cleaning master function
-    def clean_tweet_mtr(self,tweet, bigrams=False:
+    def clean_tweet_mtr(self,tweet, bigrams=False):
     # tweet: a string that contains the text of the tweet
         tweet = self.remove_user(tweet)
         tweet = self.remove_urls(tweet)
