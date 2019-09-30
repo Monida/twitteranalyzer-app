@@ -354,11 +354,11 @@ class Twitter:
     def objectivity_label(self, s):
         objectivity_val=round(TextBlob(s).sentiment.subjectivity,2)
         if objectivity_val <= 0.4:
-            return 'Subjective'
+            return 'Objective'
         elif (objectivity_val > 0.4 and objectivity_val <= 0.6):
             return 'Neutral'
         else:
-            return 'Objective'
+            return 'Subjective'
 
 
 

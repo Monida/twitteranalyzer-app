@@ -26,7 +26,7 @@
 			var month = d.getMonth();
 			var day = d.getDay();
 			var hour = d.getHours();
-			var minute = d.getMinutes()+2;
+			var minute = d.getMinutes()+3;
 			var second = d.getSeconds();
 			var countDownDate = new
 
@@ -50,7 +50,7 @@
 			  document.getElementById("demo").innerHTML = minutes + "m " + seconds + "s ";
 			    
 			  // If the count down is over, write some text 
-			  if (minutes == 0 && seconds ==0) {
+			  if (minutes == 0 && seconds == 0) {
 			    clearInterval(x);
 			    document.getElementById("Refresh").disabled = false;
 			    
