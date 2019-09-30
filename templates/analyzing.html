@@ -50,16 +50,15 @@
 			  document.getElementById("demo").innerHTML = minutes + "m " + seconds + "s ";
 			    
 			  // If the count down is over, write some text 
-			  if (minutes == 0) {
+			  if (minutes == 0 && seconds ==0) {
 			    clearInterval(x);
-			    document.getElementById("Refresh")[0].submit()
-			    document.getElementById("demo").innerHTML = "EXPIRED"
+			    document.getElementById("Refresh").disabled = false;
 			    
 			  }
 			}, 1000);
 		</script>
   		<form id="analyzingform" method= "POST" action="show_analysis">
-    		<input id="Refresh" type="submit" value="Refresh">
+    		<input id="Refresh" type="submit" value="Refresh" disabled>
 		</form>
   	</section>
 
