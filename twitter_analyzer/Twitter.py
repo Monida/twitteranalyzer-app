@@ -368,7 +368,7 @@ class Twitter:
         # This method needs to be run after the method manual_topicModelling.
         # It returns a dictionary where words_matrix is a matrix where each row is a tweet, 
         # and each column is a word(feature_name).
-        vectorizer = CountVectorizer(max_df=0.9, min_df=15, token_pattern='\w+|\$[\d\.]+|\S+')
+        vectorizer = CountVectorizer(max_df=0.8, min_df=5,stop_words=None, analyzer='word')
 
         # apply transformation
         words_matrix = vectorizer.fit_transform(self.tweets['clean_text']).toarray()
@@ -428,7 +428,6 @@ class Twitter:
     def top_labeled_topics(self, n=5):
         # This function displays the label of the topics that were assigned 
         # usingManualModelling and asign_Topic
-        # Tweets: the tweets dataframe 
         # n: top n topics
         self.topics=self.tweets.groupby('topic_1').count()
     
@@ -472,7 +471,7 @@ class Twitter:
     #---------------------------------------------------------------------------------
 
     def LDA_top_words(self, model, feature_names, num_top_words=10):
-        # This function returns the topics (top words) found using the fit_LDA function
+        # This function returns the topics (top words) found using the fit_LDA method
         self.top_words={}
         words=[]
         weights=[]
