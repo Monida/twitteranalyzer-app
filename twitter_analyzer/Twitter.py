@@ -42,6 +42,7 @@ class Twitter:
         self.tweets=pd.DataFrame()
         self.creds=self.get_creds()
         self.my_stopwords=self.get_stop_words()
+        self.my_stopwords.append('amp')
         self.topics=pd.DataFrame()
         self.num_of_tweets=0
     
