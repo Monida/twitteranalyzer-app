@@ -366,7 +366,7 @@ class Twitter:
     # Inspired by: https://ourcodingclub.github.io/2018/12/10/topic-modelling-python.html#apply
     def vectorize_tweets(self):
         # The vectorizer object will be used to transform text to vector form.
-        # This method needs to be run after the method manual_topicModelling.
+        # This method needs to be run after the method clean_and_tokenize
         # It returns a dictionary where words_matrix is a matrix where each row is a tweet, 
         # and each column is a word(feature_name).
         vectorizer = CountVectorizer(max_df=0.8, min_df=5,stop_words=None, analyzer='word')
