@@ -15,6 +15,8 @@ from nltk.tokenize import TweetTokenizer
 from nltk.corpus import webtext
 from nltk.probability import FreqDist
 from nltk.stem.snowball import SnowballStemmer
+from nltk.stem import WordNetLemmatizer
+from nltk.corpus import wordnet
 import re
 from wordcloud import WordCloud
 from sklearn.feature_extraction.text import CountVectorizer
@@ -43,6 +45,8 @@ class Twitter:
         self.creds=self.get_creds()
         self.my_stopwords=self.get_stop_words()
         self.my_stopwords.append('amp')
+        self.my_stopwords.remove('no')
+        self.my_stopwords.remove('not')
         self.topics=pd.DataFrame()
         self.num_of_tweets=0
     
@@ -162,6 +166,9 @@ class Twitter:
     
     def find_rt(self,s):
         return re.findall(r'RT ?(@[w\w]+)',s)
+
+    def replace_negations(self, s, replace = ' not'):
+        return re.sub(r"n't", replace, s)
     
     def remove_user(self,s,replace=' '):
         return re.sub(r'@[w\w]+',replace, s)
@@ -199,13 +206,15 @@ class Twitter:
     def spell_checker(self,s):
         corr_s = TextBlob(s)
         return corr_s.correct()
-        
+
+       
     # Cleaning master function
     def clean_tweet_mtr(self,tweet, bigrams=False):
     # tweet: a string that contains the text of the tweet
         tweet = self.remove_user(tweet)
         tweet = self.remove_urls(tweet)
         tweet = tweet.lower() # lower case
+        tweet = self.replace_negations(tweet)
         tweet = self.remove_punct(tweet)
         tweet = self.remove_numb(tweet)
         tweet_token_list = [word for word in tweet.split(' ')
@@ -217,9 +226,10 @@ class Twitter:
                                                 for i in range(len(tweet_token_list)-1)]
         tweet = ' '.join(tweet_token_list)
         
-        tweet = self.remove_ht(tweet, portion ='hash')
+        tweet = self.remove_ht(tweet, portion ='all')
         tweet = self.remove_spec_char(tweet)
         tweet = self.remove_double_space(tweet)
+        tweet = self.lemmatize_tweet(tweet)
         #tweet = spell_checker(tweet): not ready to be used. It takes to long to process.
         
         return tweet
@@ -227,6 +237,42 @@ class Twitter:
 #---------------------------------------------------------------------------------
 #Preprocessiong functions
 #---------------------------------------------------------------------------------
+
+    # Lemmatize
+    # Code inspired by:
+    # %%https://medium.com/@gaurav5430/using-nltk-for-lemmatizing-sentences-c1bfff963258
+
+    # function to convert nltk tag to wordnet tag
+    def nltk_tag_to_wordnet_tag(self, nltk_tag):
+        #The adjectives are not lemmatized so that "worst" is not changed to "bad"
+        #hence affecting the polarity estimation
+        if nltk_tag.startswith('J'):
+            pass
+        elif nltk_tag.startswith('V'):
+            return wordnet.VERB
+        elif nltk_tag.startswith('N'):
+            return wordnet.NOUN
+        elif nltk_tag.startswith('R'):
+            return wordnet.ADV
+        else:          
+            return None
+
+    def lemmatize_tweet(self, tweet):
+        lemmatizer = WordNetLemmatizer()
+        #tokenize the tweet and find the POS tag for each token
+        nltk_tagged = nltk.pos_tag(nltk.word_tokenize(tweet))  
+        #tuple of (token, wordnet_tag)
+        wordnet_tagged = map(lambda x: (x[0], self.nltk_tag_to_wordnet_tag(x[1])), nltk_tagged)
+        lemmatized_tweet = []
+        for word, tag in wordnet_tagged:
+            if tag is None:
+                #if there is no available tag, append the token as is
+                lemmatized_tweet.append(word)
+            else:        
+                #else use the tag to lemmatize the token
+                lemmatized_tweet.append(lemmatizer.lemmatize(word, tag))
+        return " ".join(lemmatized_tweet)
+
 
     def tokenize_and_stem(self,text):
         #This function takes a cleaned text, then tokenizes it and stemms it to
