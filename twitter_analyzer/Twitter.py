@@ -31,6 +31,8 @@ from PIL import Image
 import os.path
 # nltk.download('stopwords')
 # nltk.download('punkt')
+# nltk.download('averaged_perceptron_tagger')
+# nltk.download('wordnet')
 import matplotlib.pyplot as plt
 from matplotlib.ticker import FuncFormatter
 
