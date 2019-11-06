@@ -22,7 +22,7 @@ from wordcloud import WordCloud
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.decomposition import LatentDirichletAllocation
 from sklearn.metrics.pairwise import cosine_similarity
-from sklearn.manifold import MDS
+from sklearn.manifold import TSNE
 from sklearn.cluster import KMeans
 from sklearn.feature_extraction.text import TfidfVectorizer
 import base64
@@ -276,17 +276,7 @@ class Twitter:
         return " ".join(lemmatized_tweet)
 
 
-    def tokenize_and_stem(self,text):
-        #This function takes a cleaned text, then tokenizes it and stemms it to
-        #retrieve a list of stemmed tokens
-
-        stemmer=SnowballStemmer('english')
-        tokens = [word for sent in nltk.sent_tokenize(text) for
-        word in nltk.word_tokenize(sent)]
-        stems = [stemmer.stem(t) for t in tokens]
-        return stems
-
-    def tokenize_only(self,text):
+    def tokenize(self,text):
         #This function takes a cleaned text, then tokenizes to
         #retrieve a list of tokens
         tokens = [word for sent in nltk.sent_tokenize(text) for
@@ -444,10 +434,11 @@ class Twitter:
             ranks.append(i)
         # Proprocessing and TF-IDF feature engineering
         self.my_stopwords = self.my_stopwords +["'d","'s", 'amp','abov', 'ani', 'becaus', 'befor', 'could', 'doe', 'dure', 'might', 'must', "n't", 'need', 'onc', 'onli', 'ourselv', 'sha', 'themselv', 'veri', 'whi', 'wo', 'would', 'yourselv']
-        tfidf_vectorizer = TfidfVectorizer(max_df=0.9, max_features=200000,
-                                           min_df=10, stop_words=self.my_stopwords,
-                                           use_idf=True, tokenizer=self.tokenize_and_stem, 
-                                           ngram_range=(1,3))
+        tfidf_vectorizer = TfidfVectorizer(max_df=0.7, max_features=250,
+                                           min_df=15, stop_words=self.my_stopwords,
+                                           use_idf=True, tokenizer=self.tokenize, 
+                                           analyzer = 'word',
+                                           ngram_range=(1,4))
      
         self.tfidf_matrix = tfidf_vectorizer.fit_transform(tweets_list)
        
@@ -635,8 +626,8 @@ class Twitter:
     def create_clustergram(self):
         similarity_distance = 1 - cosine_similarity(self.tfidf_matrix)
         # Convert two components as we're plotting points in a two-dimensional plane
-        mds = MDS(n_components=2, dissimilarity="precomputed",random_state=1)
-        pos = mds.fit_transform(similarity_distance)
+        tsne =  TSNE(n_components=2, perplexity = 40, random_state=1)
+        pos = tsne.fit_transform(similarity_distance)
         #Shape (n_components, n_samples)
         xs, ys = pos[:, 0], pos[:, 1]
         #Set up colors per clusters using a dict
