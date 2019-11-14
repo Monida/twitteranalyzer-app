@@ -97,20 +97,20 @@ This section focuses on explaining all the files needed to make the TwitterAnaly
     │   ├── keyword_list.csv
     │   ├── style.css
     │   ├── twitter_nlp.png
-    │   ├── wordcloud_shape.svg
+    │   └── wordcloud_shape.svg
     ├── templates 
     │   ├── analyzing.html
     │   ├── enterquery.html
     │   ├── error.html
     │   ├── moreinsights.html
-    │   ├── retrunquery.html
+    │   └── retrunquery.html
     ├── twitter_analyzer
     │   ├── __init__.py
     │   ├── README.md
     │   ├── Twitter.py
-    │   ├── wordcloud_shape.png
+    │   └── wordcloud_shape.png
     ├── creds
-    │   ├── twitter_credentials.json
+    │   └── twitter_credentials.json
     ├── .gitignore
     ├── app.py
     ├── nltk.txt

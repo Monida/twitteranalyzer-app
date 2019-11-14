@@ -2,7 +2,6 @@
 static/wordcloud.png
 static/polarity_distribution.png
 static/clustergram.png
-creds/twitter_credentials.json
 test.py
 __pycache__
 .idea
