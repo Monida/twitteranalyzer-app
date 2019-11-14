@@ -13,7 +13,7 @@ This readme file has three sections.
  3. [Future work](#futurework)
 
 
-**Note:** if you want to clone, make sure to create the folder 'creds' with the file 'twitter-credentials.json'. [Here](#creds) you can learn how to do it.
+**Note:** if you want to clone this repo and use the app, make sure to create the folder 'creds' with the file 'twitter-credentials.json'.  Below itn the App structure section where I describe the **[creds/](#creds)** folder, you can learn how to do it.
 
 
 ## **1. Description**<a id='description'></a>
