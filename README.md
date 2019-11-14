@@ -197,6 +197,7 @@ This section focuses on explaining all the files needed to make the TwitterAnaly
   * Improve dictionary based topic modeling
   * Improve data visualization
   * Improve enqueue of jobs to be able to use the app simultaneously
+  * Improve error handling
 
   [Back to contents](#contents)
 
