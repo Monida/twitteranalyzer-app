@@ -68,7 +68,7 @@ To implement clustering 3 steps are necessary:
 
 1) TF-IDF: term frequency-inverse document frequency is a way to represent the frequency of words in each tweet, but penalizing for those words that are too common to bring value to the document (like the's and of's). The result of TF-IDF transformation is a matrix where the rows are the tweets and the columns are words (the remaining words after removing stop words) and the **ijth** entry represents the TF-IDF value of jth word for the ith tweet. Follow this [link](https://www.youtube.com/watch?v=4vT4fzjkGCQ) for a more thorough explanation of TF-IDF. I used [TfidfVectorizer()](https://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.TfidfVectorizer.html) from Scikit-learn to implement this section.
 2) K-means clustering: the TF-IDF matrix becomes the input to the K-means clustering algorithm, which I implemented using [KMeans()](https://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html), also from Scikit-learn. This algorithm consists of grouping words around some given K centroids, by finding the closest centroid to each word through an iterative process. This [video](https://www.youtube.com/watch?v=4b5d3muPQmA) contains a graphical description of K-means clustering.
-3) Represent clusters in 2 dimensions: The clustering algorithm uses words transformed into vectors in high-dimensional spaces. Using the [MDS multidimensional scaling class](https://scikit-learn.org/stable/modules/generated/sklearn.manifold.MDS.html) and the [cosine_similarity](https://scikit-learn.org/stable/modules/generated/sklearn.metrics.pairwise.cosine_similarity.html) from Scikit-learn, inspired by [3], we can find the "similarity-distance" between the data points (tweets in vector format) to be able to represent them in 2 dimensions. You can read the [MDS user guide](https://scikit-learn.org/stable/modules/manifold.html#multidimensional-scaling) to better understand how this is done. 
+3) Represent clusters in 2 dimensions: The clustering algorithm uses words transformed into vectors in high-dimensional spaces. Using the [t-SNE](https://scikit-learn.org/stable/modules/generated/sklearn.manifold.TSNE.html) (t-distributed Stochastic Neighbor Embedding) and the [cosine_similarity](https://scikit-learn.org/stable/modules/generated/sklearn.metrics.pairwise.cosine_similarity.html) from Scikit-learn, inspired by [3], we can find the "similarity-distance" between the data points (tweets in vector format) to be able to represent them in 2 dimensions. You can read the [t-SNE user guide](https://scikit-learn.org/stable/modules/manifold.html#t-sne) to better understand how this is done. 
 
 ### **1.6. Sentiment Analysis and Polarity**
 After identifying the different topics, the user can select any of them and go deeper into each topic to learn whether the tweets in that topic are positive or negative, or whether they are objective or subjective. This is called Sentiment (or Polarity) and Subjectivity Analysis respectively. 
@@ -179,7 +179,12 @@ This section focuses on explaining all the files needed to make the TwitterAnaly
 
   ## **3. Future work**<a id='futurework'></a>
 
-
+  * Add spell checker to clean and tokenize
+  * Improve clustering
+  * Improve LDA
+  * Improve dictionary based topic modeling
+  * Improve data visualization
+  * Improve enqueue of jobs to be able to use the app simultaneously
 
   [Back to contents](#contents)
 
