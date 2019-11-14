@@ -2,7 +2,6 @@
 static/wordcloud.png
 static/polarity_distribution.png
 static/clustergram.png
-test.py
 __pycache__
 .idea
 venv
