@@ -12,6 +12,10 @@ This readme file has three sections.
  2. [App structure](#appstructure)
  3. [Future work](#futurework)
 
+
+**Note:** if you want to clone, make sure to create the folder 'creds' with the file 'twitter-credentials.json'. [Here](#creds) you can learn how to do it.
+
+
 ## **1. Description**<a id='description'></a>
 ### **1.1. The app**
 
@@ -153,7 +157,15 @@ This section focuses on explaining all the files needed to make the TwitterAnaly
   
      * **__init__:** This file indicates that the directory twitter_analyzer is a python package.
   
-  * **creds/:** This does not appear in the repo because it is hidden. However if you want the app to work you need to create the folder creds that contains a single file named twitter-credentials. 
+  * **creds/:** This folder does not appear in the repo because it is hidden. However if you want the app to work you need to create the folder creds that contains a single file named twitter-credentials.json. <a id='creds'></a>
+
+     * **obtain your twitter credentials:** To create your own credentials, go to the following [link](https://developer.twitter.com/en/docs/basics/authentication/guides/access-tokens) and follow the steps under "Generating access tokens".
+
+     * **twitter-credentials.json:** Once you have your credentials, create the twitter-credential.json file with the following code:
+
+    {"CONSUMER_KEY": "your_consumer_key", "CONSUMER_SECRET": "your_consumer_secret", "ACCESS_TOKEN": "your_access_token", "ACCESS_TOKEN_SECRET": "your_access_token_secret"}
+
+    Notice that the values of this dictionaries are long strings, so remember to put them inside the double quotes. 
   
   * **.gitignore:** This hidden text file contains the files and directories that are not tracked using git.
   
