@@ -5,3 +5,4 @@ static/clustergram.png
 creds/twitter_credentials.json
 test.py
 __pycache__
+.idea
