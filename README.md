@@ -165,7 +165,7 @@ This section focuses on explaining all the files needed to make the TwitterAnaly
 
     {"CONSUMER_KEY": "your_consumer_key", "CONSUMER_SECRET": "your_consumer_secret", "ACCESS_TOKEN": "your_access_token", "ACCESS_TOKEN_SECRET": "your_access_token_secret"}
 
-    **Notice that the values of this dictionaries are long strings, so remember to put them inside the double quotes.**
+    **Notice that the values of this dictionary are long strings, so remember to put them inside the double quotes.**
   
   * **.gitignore:** This hidden text file contains the files and directories that are not tracked using git.
   
