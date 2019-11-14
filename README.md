@@ -8,9 +8,9 @@ Below you can find the description of the content of this repository as well as 
 
 This readme file has three sections.
 
-### 1. [Description](#description)
-### 2. [App structure](#appstructure)
-### 3. [Future work](#futurework)
+ 1. [Description](#description)
+ 2. [App structure](#appstructure)
+ 3. [Future work](#futurework)
 
 ## **1. Description**<a id='description'></a>
 ### **1.1. The app**
