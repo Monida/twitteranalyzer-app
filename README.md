@@ -1,4 +1,4 @@
-# **twitteranalyzer-app**
+# **twitteranalyzer-app**<a id='contents'></a>
 
 <img src="static/twitter_nlp.png">
 
@@ -6,8 +6,13 @@ This repository contains all the files of the [TwitterAnalyzer Web-app](https://
 
 Below you can find the description of the content of this repository as well as some links to understand the app's features. 
 
+This readme file has three sections.
 
-## **1. Description**
+### 1. [Description](#description)
+### 2. [App structure](#appstructure)
+### 3. [Future work](#futurework)
+
+## **1. Description**<a id='description'></a>
 ### **1.1. The app**
 
 The TwitterAnalyzer App is a Web App where the user can enter a search word to learn what people are tweeting about that query. The app uses Natural Language Processing (NLP) techniques to analyze the text of the tweets and come up with meaningful insights. 
@@ -79,7 +84,10 @@ When there are some lengthy processes in a Heroku app (like downloading tweets o
 Therefore, if a task takes more than 30 seconds to run, something called "background worker" needs to be implemented. A background worker is a function that handles all these lengthy tasks. To do so, 
 we need to use the [RQ library](http://python-rq.org/) and the [Redis server](https://redislabs.com/lp/python-redis/) for Python. The RQ library is a Python library that allows you to enqueue the lengthly tasks. Once a task is enqueued, the worker will handle it by sending it to the Redis server to be run asynchronously in the background.  If you want to learn how this is implemented, follow this [link](https://devcenter.heroku.com/articles/python-rq). 
 
-## **2. App structure**
+
+[Back to contents](#contents)
+
+## **2. App structure**<a id='appstructure'></a>
 This section focuses on explaining all the files needed to make the TwitterAnalyzer App work.
 ### **2.1 Project folders tree structure**
 
@@ -101,11 +109,8 @@ This section focuses on explaining all the files needed to make the TwitterAnaly
     │   ├── README.md
     │   ├── Twitter.py
     │   ├── wordcloud_shape.png
-    ├── venv
-    │   ├── bin
-    │   ├── share
-    │   ├── pip-selfchekc.json
-    │   ├── pyvenv.cfg
+    ├── creds
+    │   ├── twitter_credentials.json
     ├── .gitignore
     ├── app.py
     ├── nltk.txt
@@ -118,7 +123,7 @@ This section focuses on explaining all the files needed to make the TwitterAnaly
     └── worker.py
 ```
 
-## **2.2 Project folders description**
+### **2.2 Project folders description**
 
 * **twitteranalyzer-app:** This is the project folder. All files needed to run the app must be stored here. 
 
@@ -148,7 +153,7 @@ This section focuses on explaining all the files needed to make the TwitterAnaly
   
      * **__init__:** This file indicates that the directory twitter_analyzer is a python package.
   
-  * **venv/:** This folder contains all the information of the virtual environment where the Flask app was created. 
+  * **creds/:** This does not appear in the repo because it is hidden. However if you want the app to work you need to create the folder creds that contains a single file named twitter-credentials. 
   
   * **.gitignore:** This hidden text file contains the files and directories that are not tracked using git.
   
@@ -169,6 +174,14 @@ This section focuses on explaining all the files needed to make the TwitterAnaly
   * **runtime.txt:** This file tells Heroku what version of python is needed.
     
   * **worker.py:**   The worker file is the *background worker* function that "listens" to the lengthy tasks that are enqueued and handles them by sending them to the Redis server to be executed asynchronously. 
+
+  [Back to contents](#contents)
+
+  ## **3. Future work**<a id='futurework'></a>
+
+
+
+  [Back to contents](#contents)
 
 References:
 
