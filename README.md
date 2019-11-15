@@ -50,7 +50,7 @@ Usually, the result of topic modeling is a list of top N words that represent th
 
 Dictionary-based topic modeling is the simplest way of labeled topic modeling but it requires a lot of manual work to find the topics from a sample of docs and then label them. Each found topic becomes a key of the dictionary and the related words become the values. For this app, once I have the dictionary manually created, the topic of each tweet is assigned according to what related words in the dictionary best match the bag of words representing each tweet. 
 
-The dictionary could also be scrapped from the internet to make the labeling more automatic and sophisticated (yet, another thing I can do to improve the app). These papers [1,2] suggest a interesting way to do it. 
+The dictionary could also be scrapped from the internet to make the labeling more automatic and sophisticated (yet, another thing I can do to improve the app). These papers [1,2] suggest an interesting way to do it. 
 
 #### **1.5.2. LDA topic modeling**
 
@@ -66,7 +66,7 @@ To learn more about how the LDA algorithm works, you can go to this very instruc
 
 #### **1.5.3. Clustering**
 
-Clustering is an unsupervised (without need for labels) technique whose objective is to group words, depending on their similarity. Grouping words according to their similarity is another way to finding the top N words of each relevant topic whithin the teets corpus.  
+Clustering is an unsupervised (without need for labels) technique whose objective is to group words, depending on their similarity. Grouping words according to their similarity is another way to finding the top N words of each relevant topic whithin the tweets corpus.  
 
 To implement clustering 3 steps are necessary:
 
@@ -195,9 +195,13 @@ This section focuses on explaining all the files needed to make the TwitterAnaly
   * Improve clustering
   * Improve LDA
   * Improve dictionary based topic modeling
+  * Add automatic topic labeling
+  * Improve sentiment analysis
   * Improve data visualization
   * Improve enqueue of jobs to be able to use the app simultaneously
   * Improve error handling
+  * Include emoji analysis
+  * Analyze tweets with links to images
 
   [Back to contents](#contents)
 
