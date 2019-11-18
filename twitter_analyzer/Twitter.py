@@ -504,8 +504,8 @@ class Twitter:
                 else:
                     hts_dict[ht] +=1
         hts_df = pd.DataFrame({'hashtags':list(hts_dict.keys()),'count':list(hts_dict.values())})
-        top_hts = hts_df[hts_df['count']>=10]
-        return top_hts
+        self.top_hts = hts_df[hts_df['count']>=10]
+        return self.top_hts
 
 
     def create_LOW(self,topic):
@@ -536,9 +536,7 @@ class Twitter:
         figure_url = base64.b64encode(img.getvalue()).decode()
         plt.close()
 
-        self.hastags_plot = 'data:image/png;base64,{}'.format(figure_url)
-
-        return self.hastags_plot
+        return 'data:image/png;base64,{}'.format(figure_url)
 
 
     def LDA_top_words(self, model, feature_names, num_top_words=10):
