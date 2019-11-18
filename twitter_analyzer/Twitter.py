@@ -536,7 +536,8 @@ class Twitter:
         figure_url = base64.b64encode(img.getvalue()).decode()
         plt.close()
 
-        return 'data:image/png;base64,{}'.format(figure_url)
+        self.hashtags_plot = 'data:image/png;base64,{}'.format(figure_url)
+        return self.hashtags_plot
 
 
     def LDA_top_words(self, model, feature_names, num_top_words=10):
