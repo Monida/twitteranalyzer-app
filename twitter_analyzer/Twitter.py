@@ -494,9 +494,9 @@ class Twitter:
     # Auxiliary functions
     #---------------------------------------------------------------------------------
     
-    def hashtag_summary(self)
+    def hashtag_summary(self):
         hts_dict={}
-        for tweet in tweets['hashtags']:
+        for tweet in self.tweets['hashtags']:
             hts=find_ht(tweet)
             for ht in hts:
                 if ht not in hts_dict:
