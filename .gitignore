@@ -4,5 +4,5 @@ static/polarity_distribution.png
 static/clustergram.png
 __pycache__
 .idea
-venv
+#venv
 #creds
