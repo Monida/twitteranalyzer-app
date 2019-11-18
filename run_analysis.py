@@ -7,6 +7,10 @@ def run_analysis(twitter_obj):
     tweets = twitter_obj.clean_and_tokenize()
     twitter_obj.num_of_tweets = len(tweets)
 
+    # Summary of hashtags
+
+    hashtags = twitter_obj.hashtag_summary()
+
     # Perform manual topic modeling
 
     tweets = twitter_obj.manualModelling()

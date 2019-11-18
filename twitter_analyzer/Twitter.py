@@ -494,7 +494,20 @@ class Twitter:
     # Auxiliary functions
     #---------------------------------------------------------------------------------
     
-    
+    def hashtag_summary(self)
+        hts_dict={}
+        for tweet in tweets['hashtags']:
+            hts=find_ht(tweet)
+            for ht in hts:
+                if ht not in hts_dict:
+                    hts_dict[ht]=1
+                else:
+                    hts_dict[ht]+=1
+        
+        hts_df=pd.DataFrame({'hashtags':list(hts_dict.keys()),'count':list(hts_dict.values())})
+        top_hts=hts_df[hts_df['count']>=10]
+        return self.top_hts
+
     def create_LOW(self,topic):
     #This function takes all the tweets and create a list of words (LOW)
         LOW=[]
