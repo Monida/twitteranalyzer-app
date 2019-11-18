@@ -522,6 +522,25 @@ class Twitter:
     # Visualization functions
     #---------------------------------------------------------------------------------
 
+    def plot_hts(self):
+    # This function plots all the top hashtags found after running hashtags_summary()
+
+        img=io.BytesIO()
+        x = np.arange(len(self.top_hts))
+        values = top_hts['count'].values
+        labels = top_hts['hashtags'].values
+        plt.bar(x,values, color = '#03cea4')
+        plt.xticks(x, labels, rotation = 'vertical')
+        plt.savefig(img,format = 'png')
+        img.seek(0)
+        figure_url = base64.b64encode(img.getvalue()).decode()
+        plt.close()
+
+        self.hastags_plot = 'data:image/png;base64,{}'.format(figure_url)
+
+        return self.hastags_plot
+
+
     def LDA_top_words(self, model, feature_names, num_top_words=10):
         # This function returns the topics (top words) found using the fit_LDA method
         self.top_words={}
