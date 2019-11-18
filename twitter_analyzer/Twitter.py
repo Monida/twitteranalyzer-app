@@ -497,7 +497,7 @@ class Twitter:
     def hashtag_summary(self):
         hts_dict = {}
         for tweet in self.tweets['hashtags']:
-            hts = self.find_ht(tweet)
+            hts = self.find_ht(str(tweet))
             for ht in hts:
                 if ht not in hts_dict:
                     hts_dict[ht] = 1
