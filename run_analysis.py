@@ -10,6 +10,7 @@ def run_analysis(twitter_obj):
     # Summary of hashtags
 
     twitter_obj.hashtag_summary()
+    twitter_obj.plot_hts()
 
 
     # Perform manual topic modeling
