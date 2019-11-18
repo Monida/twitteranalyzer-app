@@ -527,8 +527,8 @@ class Twitter:
 
         img=io.BytesIO()
         x = np.arange(len(self.top_hts))
-        values = top_hts['count'].values
-        labels = top_hts['hashtags'].values
+        values = self.top_hts['count'].values
+        labels = self.top_hts['hashtags'].values
         plt.bar(x,values, color = '#03cea4')
         plt.xticks(x, labels, rotation = 'vertical')
         plt.savefig(img,format = 'png')
