@@ -292,7 +292,7 @@ class Twitter:
         return tokens
 
     def create_tweets_list(self):
-        self.tweets_list=tweets['clean_text'].tolist()
+        self.tweets_list=self.tweets['clean_text'].tolist()
         return self.tweets_list
 
 
