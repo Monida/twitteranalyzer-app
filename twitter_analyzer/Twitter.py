@@ -458,34 +458,27 @@ class Twitter:
         return model
 
     def cluster_text(self):
+        # This function takes the tweets and clusters them. It adds two new columns
+        # tweets['cluster']: the number of cluster it corresponds to
+        # tweets['rank']: rank useful to identify the tweets during clustering
         tweets_list=self.tweets['clean_text'].tolist()
         ranks=[]
         for i in range(1,len(tweets_list)+1):
             ranks.append(i)
-        # Proprocessing and TF-IDF feature engineering
-        self.my_stopwords = self.my_stopwords +["'d","'s", 'amp','abov', 'ani', 'becaus', 'befor', 'could', 'doe', 'dure', 'might', 'must', "n't", 'need', 'onc', 'onli', 'ourselv', 'sha', 'themselv', 'veri', 'whi', 'wo', 'would', 'yourselv']
-        tfidf_vectorizer = TfidfVectorizer(max_df=0.7, max_features=250,
-                                           min_df=15, stop_words=self.my_stopwords,
-                                           use_idf=True, tokenizer=self.tokenize, 
-                                           analyzer = 'word',
-                                           ngram_range=(1,4))
-     
-        self.tfidf_matrix = tfidf_vectorizer.fit_transform(tweets_list)
-       
-        terms = tfidf_vectorizer.get_feature_names()
-
+        
+        # Need to run tfidf first to compute self.tfidf_matrix and self.tweets_list
         # Clustering using K-means
         num_clusters = 5
 
-        km = KMeans(n_clusters=num_clusters)#try init='k-means++'
+        km = KMeans(n_clusters=num_clusters)
         km.fit(self.tfidf_matrix)
 
         # final clusters
         self.clusters = km.labels_.tolist()
-        tweets_data = { 'rank': ranks, 'complaints': tweets_list,'cluster': self.clusters }
+        tweets_data = { 'rank': ranks, 'complaints': self.tweets_list,'cluster': self.clusters }
         clusters_df = pd.DataFrame(tweets_data, index = [self.clusters],columns = ['rank', 'cluster'])
-        clusters_df['cluster'].value_counts()
-        return clusters_df
+        self.tweets['cluster'] = clusters_df['cluster']
+        return self.tweets
 
     
 #---------------------------------------------------------------------------------
