@@ -504,7 +504,8 @@ class Twitter:
                 else:
                     hts_dict[ht] +=1
         hts_df = pd.DataFrame({'hashtags':list(hts_dict.keys()),'count':list(hts_dict.values())})
-        self.top_hts = hts_df[hts_df['count']>=10]
+        hts_df.sort_values(by=['count'], inplace=True, axis=0, ascending= False)
+        top_hts=hts_df[0:5]
         return self.top_hts
 
 
