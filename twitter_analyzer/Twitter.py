@@ -223,9 +223,12 @@ class Twitter:
 
         self.my_stopwords.remove('no')
         self.my_stopwords.remove('not')
-        
+
         tweet_token_list = [word for word in tweet.split(' ')
                                 if word not in self.my_stopwords] # remove stopwords
+
+        self.my_stopwords.append('no')
+        self.my_stopwords.append('not')
     
         if bigrams:
             # Create bigrams
