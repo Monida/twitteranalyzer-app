@@ -47,8 +47,6 @@ class Twitter:
         self.creds=self.get_creds()
         self.my_stopwords=self.get_stop_words()
         self.my_stopwords.append('amp')
-        self.my_stopwords.remove('no')
-        self.my_stopwords.remove('not')
         self.topics=pd.DataFrame()
         self.num_of_tweets=0
     
@@ -219,6 +217,13 @@ class Twitter:
         tweet = self.replace_negations(tweet)
         tweet = self.remove_punct(tweet)
         tweet = self.remove_numb(tweet)
+
+        # Remove 'no' and 'not' grom my_stopwords so that they remain in the tokenized
+        # tweet. This will help sentiment analysis. 
+
+        self.my_stopwords.remove('no')
+        self.my_stopwords.remove('not')
+        
         tweet_token_list = [word for word in tweet.split(' ')
                                 if word not in self.my_stopwords] # remove stopwords
     
