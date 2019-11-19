@@ -291,6 +291,10 @@ class Twitter:
         word in nltk.word_tokenize(sent)]
         return tokens
 
+    def create_tweets_list(self):
+        self.tweets_list=tweets['clean_text'].tolist()
+        return self.tweets_list
+
 
 #---------------------------------------------------------------------------------
 #NLP functions
@@ -311,6 +315,24 @@ class Twitter:
         self.tweets['token_text']=self.tweets['clean_text'].apply(tokenize_txt)
         
         return self.tweets
+
+
+    def tfidf(self):
+        # This funciton fermorm TF-IDF vectorization. It takes the clean tweets from
+        # tweets['clean_text'] and then returns the tfidf-matrix and tfidf_terms.
+        # You need to run clean_and_tokenize before running this function.
+        self.create_tweets_list()
+
+        tfidf_vectorizer=TfidfVectorizer(max_df=0.7, max_features=250,
+            min_df=15, stop_words=self.my_stopwords,
+            use_idf=True, tokenizer = self.tokenize,
+            analyzer = 'word',
+            ngram_range = (1,4))
+
+        self.tfidf_matrix = tfidf_vectorizer.fit_transform(self.tweets_list)
+        self.tfidf_terms = tfidf_vectorizer.get_feature_names()
+
+        return self.tfidf_matrix, self.tfidf_terms
 
 
     def manualModelling(self):
