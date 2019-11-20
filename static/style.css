@@ -20,3 +20,4 @@ p               { color: #465362;}
 .center			{display:block;
 				 margin-left: auto;
 				 margin-right: auto;}
+#dropdown		{width: 500px;}
