@@ -462,9 +462,8 @@ class Twitter:
         # This function takes the tweets and clusters them. It adds two new columns
         # tweets['cluster']: the number of cluster it corresponds to
         # tweets['rank']: rank useful to identify the tweets during clustering
-        tweets_list=self.tweets['clean_text'].tolist()
         ranks=[]
-        for i in range(1,len(tweets_list)+1):
+        for i in range(1,len(self.tweets_list)+1):
             ranks.append(i)
         
         # Need to run tfidf first to compute self.tfidf_matrix and self.tweets_list
