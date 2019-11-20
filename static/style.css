@@ -19,5 +19,6 @@ p               { color: #465362;}
 				 padding: 1em; background: white;}
 .center			{display:block;
 				 margin-left: auto;
-				 margin-right: auto;}
+				 margin-right: auto;
+				 margin-bottom: 100px;}
 #dropdown		{width: 500px;}
