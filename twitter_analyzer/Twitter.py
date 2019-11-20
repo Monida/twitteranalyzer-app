@@ -691,11 +691,11 @@ class Twitter:
         
         #Set up cluster names using a dict. Later change it by authomatic topic modelling
 
-        cluster_names = {0: 'Topic 1',
-                         1: 'Topic 2',
-                         2: 'Topic 3',
-                         3: 'Topic 4',
-                         4: 'Topic 5'}
+        cluster_names = {0: 'Cluster 1',
+                         1: 'Cluster 2',
+                         2: 'Cluster 3',
+                         3: 'Cluster 4',
+                         4: 'Cluster 5'}
         
         # Plot clustergram
         # Create data frame that has the result of the MDS and the cluster
