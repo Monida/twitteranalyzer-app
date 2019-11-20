@@ -428,6 +428,42 @@ class Twitter:
             return 'Neutral'
         else:
             return 'Subjective'
+
+    def label_cluster_topics(self):
+        # This function finds the topic labels that are more likely for each topic.
+        # Need to run manualModeling() and cluster_text() first.
+
+        sorted_tweets = self.tweets.sort_values(by='cluster', axis=0, inplace=False)
+        aggregated_tweets = sorted_tweets.groupby(['cluster','topic_1']).count()
+
+        def percentages(x):
+            return '%d' % (x) + '%'
+
+        self.cltr_topics = pd.DataFrame()
+        for i in range(5):
+            tmp_df = pd.DataFrame()
+            count = 'count' +  str(i+1)
+            topic = 'topic' + str(i+1)
+            percent = 'percent' + str(i+1)
+            tmp_df[count] = aggregated_tweets.iloc[aggregated_tweets.index.get_level_values(0) == i]['text']
+            tmp_df[topic] = tmp_df.index.get_level_values('topic_1').values
+            total_tweets = sum(tmp_df[count].values)
+            tmp_df = tmp_df[tmp_df[count]>=10]
+            tmp_df[percent] = round(tmp_df[count]*100/total_tweets,2)
+            tmp_df.sort_values(by=percent,inplace=True, ascending=False)
+            tmp_df[percent] = tmp_df[percent].apply(percentages)
+            tmp_df.drop(count, axis=1, inplace=True)
+            tmp_df.reset_index(inplace=True, drop=True)
+
+        self.cltr=pd.concat([cltr,tmp_df],axis=1,ignore_index=False, sort=False)
+
+        for i in range(5):
+            topic = 'topic' + str(i+1)
+            percent = 'percent' + str(i+1)
+            self.cltr[topic].fillna(' ', inplace = True)
+            self.cltr[percent].fillna('0%', inplace = True)
+
+        return self.cltr_topics
    
     
     def fit_LDA(self,words_matrix,number_of_topics=5):

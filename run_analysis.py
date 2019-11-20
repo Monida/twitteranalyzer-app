@@ -23,10 +23,11 @@ def run_analysis(twitter_obj):
     lda_model = twitter_obj.fit_LDA(matrix)
     twitter_obj.LDA_top_words(lda_model, terms)
 
-    # Create clustergram
+    # Create clusters
 
     twitter_obj.top_labeled_topics()
     twitter_obj.cluster_text()
     twitter_obj.create_clustergram()
+    twitter_obj.label_cluster_topics()
     
     return twitter_obj
