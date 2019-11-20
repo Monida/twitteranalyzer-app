@@ -47,6 +47,7 @@ class Twitter:
         self.creds=self.get_creds()
         self.my_stopwords=self.get_stop_words()
         self.my_stopwords.append('amp')
+        self.my_stopwords += ["'d", "'ll", "'re", "'s", "'ve", 'could', 'might', 'must', "n't", 'need', 'sha', 'wo', 'would', "ca", "na"]
         self.topics=pd.DataFrame()
         self.num_of_tweets=0
     
@@ -449,7 +450,7 @@ class Twitter:
     
     def fit_LDA(self,words_matrix,number_of_topics=5):
         # This method fits the LDA model to the words_matrix, given, to find number of topics provided.
-        # words_matrix: is the resulf of running the method vectorize_tweets()
+        # words_matrix: is the resulf of running the method tfidf()
             
         model = LatentDirichletAllocation(n_components=number_of_topics, random_state=0)
         
