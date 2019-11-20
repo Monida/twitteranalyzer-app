@@ -357,8 +357,7 @@ class Twitter:
         
         # Make column topic_1 and topic1_precent. Same with topic 2
         self.tweets['topic_1_percent']=[row[1] for row in self.tweets['topic_1']]
-        self.tweets['topic_1']=[row[0] for row in self.tweets['topic_1']]
-        
+        self.tweets['topic_1']=[row[0] for row in self.tweets['topic_1']]      
         
         self.tweets['topic_2_percent']=[row[1] for row in self.tweets['topic_2']]
         self.tweets['topic_2']=[row[0] for row in self.tweets['topic_2']]
