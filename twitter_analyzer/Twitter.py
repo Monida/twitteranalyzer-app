@@ -455,13 +455,13 @@ class Twitter:
             tmp_df.drop(count, axis=1, inplace=True)
             tmp_df.reset_index(inplace=True, drop=True)
 
-        self.cltr=pd.concat([cltr,tmp_df],axis=1,ignore_index=False, sort=False)
+        self.cltr_topics=pd.concat([self.cltr_topics,tmp_df],axis=1,ignore_index=False, sort=False)
 
         for i in range(5):
             topic = 'topic' + str(i+1)
             percent = 'percent' + str(i+1)
-            self.cltr[topic].fillna(' ', inplace = True)
-            self.cltr[percent].fillna('0%', inplace = True)
+            self.cltr_topics[topic].fillna(' ', inplace = True)
+            self.cltr_topics[percent].fillna('0%', inplace = True)
 
         return self.cltr_topics
    
