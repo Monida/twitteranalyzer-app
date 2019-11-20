@@ -555,6 +555,7 @@ class Twitter:
         labels = self.top_hts['hashtags'].values
         plt.bar(x,values, color = '#03cea4')
         plt.xticks(x, labels, rotation = 'vertical')
+        plt.tight_layout()
         plt.savefig(img,format = 'png')
         img.seek(0)
         figure_url = base64.b64encode(img.getvalue()).decode()
