@@ -477,7 +477,7 @@ class Twitter:
         self.clusters = km.labels_.tolist()
         tweets_data = { 'rank': ranks, 'complaints': self.tweets_list,'cluster': self.clusters }
         clusters_df = pd.DataFrame(tweets_data, index = [self.clusters],columns = ['rank', 'cluster'])
-        self.tweets['cluster'] = clusters_df['cluster']
+        self.tweets['cluster'] = clusters_df['cluster'].values
         return self.tweets
 
     
