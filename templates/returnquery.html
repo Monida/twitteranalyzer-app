@@ -18,16 +18,26 @@
 
         <img src="{{hashtags}}" width="500" class="center"/><br><br><br><br>
       
-        <h2>Topic clustering by tweet</h2><br>
+        <h2>Tweets clusters</h2><br>
         <img src="{{clustergram}}" width="500" class="center"/> <br><br>
 
         <h2>Tweets by cluster</h2><br>
 
-          <h3>Cluster 1</h2><br>
-          <h3>Cluster 2</h2><br>
-          <h3>Cluster 3</h2><br>
-          <h3>Cluster 4</h2><br>
-          <h3>Cluster 5</h2><br>
+          <h3>Cluster 1</h3><br>
+
+          <select name = "cluster1">
+            {% for tweet in tweets_cltr1 %}
+            <option value= "{{tweet}}">{{tweet}}</option>"
+            {% endfor %}
+          </select>
+
+
+
+
+          <h3>Cluster 2</h3><br>
+          <h3>Cluster 3</h3><br>
+          <h3>Cluster 4</h3><br>
+          <h3>Cluster 5</h3><br>
 
         <h2>Top words</h2><br>
 
@@ -56,7 +66,7 @@
         <h2>Top topics</h2><br>
 
           {{topics_table|safe}} <br><br>
-          
+
   		</p>
 
   		<form id="returnresultsform" method="POST" action="/">
