@@ -25,23 +25,23 @@
 
           <h3>Cluster 1</h3>
 
-          <select name = "cluster1" id="dropdown">
+          <select name = "cluster1" style="width:500px">
             {% for tweet in tweets_cltr1 %}
-            <option value= "{{tweet}}" style="width:500px">{{tweet}}</option>"
+            <option value= "{{tweet}}" >{{tweet}}</option>"
             {% endfor %}
           </select>
 
           <h3>Cluster 2</h3>
 
-          <select name = "cluster2" >
+          <select name = "cluster2" style="width:500px">
             {% for tweet in tweets_cltr2 %}
-            <option value= "{{tweet}}" style="width:500px">{{tweet}}</option>"
+            <option value= "{{tweet}}" >{{tweet}}</option>"
             {% endfor %}
           </select>
 
           <h3>Cluster 3</h3>
           
-          <select name = "cluster3" >
+          <select name = "cluster3" style="width:500px">
             {% for tweet in tweets_cltr3 %}
             <option value= "{{tweet}}" >{{tweet}}</option>"
             {% endfor %}
@@ -49,7 +49,7 @@
 
           <h3>Cluster 4</h3>
 
-          <select name = "cluster4" >
+          <select name = "cluster4" style="width:500px">
             {% for tweet in tweets_cltr4 %}
             <option value= "{{tweet}}" >{{tweet}}</option>"
             {% endfor %}
@@ -57,11 +57,11 @@
           
           <h3>Cluster 5</h3>
 
-          <select name = "cluster5" >
+          <select name = "cluster5" style="width:500px">
             {% for tweet in tweets_cltr5 %}
             <option value= "{{tweet}}" >{{tweet}}</option>"
             {% endfor %}
-          </select>
+          </select><br><br>
 
         <h2>Top words</h2><br>
 
