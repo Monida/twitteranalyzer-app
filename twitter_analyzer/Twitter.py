@@ -459,7 +459,7 @@ class Twitter:
         for i in range(5):
             topic = 'topic' + str(i+1)
             percent = 'percent' + str(i+1)
-            self.cltr_topics[topic].fillna(' ', inplace = True)
+            #self.cltr_topics[topic].fillna(' ', inplace = True)
             self.cltr_topics[percent].fillna('0%', inplace = True)
 
         return self.cltr_topics
