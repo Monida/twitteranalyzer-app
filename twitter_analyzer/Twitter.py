@@ -456,11 +456,11 @@ class Twitter:
 
             self.cltr_topics=pd.concat([self.cltr_topics,tmp_df],axis=1,ignore_index=False, sort=False)
 
-        for i in range(5):
-            topic = 'topic' + str(i+1)
-            percent = 'percent' + str(i+1)
-            self.cltr_topics[topic].fillna(' ', inplace = True)
-            self.cltr_topics[percent].fillna('0%', inplace = True)
+        #for i in range(5):
+        #    topic = 'topic' + str(i+1)
+        #    percent = 'percent' + str(i+1)
+        #    self.cltr_topics[topic].fillna(' ', inplace = True)
+        #    self.cltr_topics[percent].fillna('0%', inplace = True)
 
         return self.cltr_topics
    
