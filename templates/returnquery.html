@@ -25,11 +25,19 @@
 
           <h3>Cluster 1</h3>
 
-          <select name = "cluster1" style="width:600px" multiple>
-            {% for tweet in tweets_cltr1 %}
-            <option value= "{{tweet}}" >{{tweet}}</option>"
-            {% endfor %}
-          </select>
+          <!--<select name = "cluster1" style="width:600px" multiple>-->
+            <!--{% for tweet in tweets_cltr1 %}-->
+            <!--<option value= "{{tweet}}" >{{tweet}}</option>"-->
+            <!--{% endfor %}-->
+          <!--</select>-->
+          
+          <nav>
+            <ul>
+              {% for tweet in tweets_cltr1 %}
+              <li value= "{{tweet}}">{{tweet}}</li>
+              {% endfor %}
+            </ul>
+          </nav>
 
           <h3>Cluster 2</h3>
 
