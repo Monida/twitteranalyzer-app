@@ -5,8 +5,6 @@ h1              { border-bottom: 2px solid #03cea4; }
 h2              { font-size: 1.2em; }
 h3				{ color: #03cea4;}
 p               { color: #465362;}
-nav ul          {height:20px; width:18%;}
-nav ul          {overflow:hidden; overflow-y:scroll;}
 .page           { margin: 2em auto; width: 50em; border: 3px solid #345995;
                   padding: 1em; background: white; }
 .page2           { margin: 2em auto; width: 35em; border: 3px solid #345995;

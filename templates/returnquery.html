@@ -7,6 +7,9 @@
                      color: white;
                      cursor: pointer;
                      padding: 3px 6px;}
+  nav.sample_tweets{height: 100px;
+                    width:500px;
+                    overflow:scroll;}
 </style>
 <div class=page>
   		<h1>Search word: {{query}}</h1>
@@ -31,7 +34,7 @@
             <!--{% endfor %}-->
           <!--</select>-->
           
-          <nav>
+          <nav class="sample_tweets">
             <ul>
               {% for tweet in tweets_cltr1 %}
               <li value= "{{tweet}}">{{tweet}}</li>
