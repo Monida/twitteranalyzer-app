@@ -1,3 +1,8 @@
+"""
+author: Monica Gomez
+version of run_analysis.py: v1.0
+launch date: October 2019
+"""
 from twitter_analyzer.Twitter import Twitter
 
 def run_analysis(twitter_obj):

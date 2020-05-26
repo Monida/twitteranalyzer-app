@@ -1,3 +1,9 @@
+"""
+author: Monica Gomez
+version of worker.py: v1.0
+launch date: October 2019
+"""
+
 import os
 import redis
 from rq import Worker, Queue, Connection

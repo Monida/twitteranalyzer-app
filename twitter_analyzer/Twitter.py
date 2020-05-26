@@ -1,4 +1,10 @@
 """
+author: Monica Gomez
+version of Twitter.py: v1.0
+launch date: October 2019
+"""
+
+"""
 This code is inspired by 
 http://www.hristogueorguiev.com/basic-twitter-data-miner-and-data-analysis-
 python-twython-twitter-api-pandas-matplotlib/
