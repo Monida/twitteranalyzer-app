@@ -7,8 +7,8 @@
                      color: white;
                      cursor: pointer;
                      padding: 3px 6px;}
-  nav.sample_tweets{height: 100px;
-                    width:500px;
+  nav.sample_tweets{height: 200px;
+                    width:800px;
                     overflow:scroll;}
 </style>
 <div class=page>
@@ -43,36 +43,44 @@
           </nav>
 
           <h3>Cluster 2</h3>
-
-          <select name = "cluster2" style="width:500px">
-            {% for tweet in tweets_cltr2 %}
-            <option value= "{{tweet}}" >{{tweet}} style="width:500px"</option>"
-            {% endfor %}
-          </select>
+          
+          <nav class="sample_tweets"enter">
+            <ul>
+              {% for tweet in tweets_cltr2 %}
+              <li value= "{{tweet}}">{{tweet}}</li>
+              {% endfor %}
+            </ul>
+          </nav>
 
           <h3>Cluster 3</h3>
           
-          <select name = "cluster3" style="width:500px">
-            {% for tweet in tweets_cltr3 %}
-            <option value= "{{tweet}}" >{{tweet}}</option>"
-            {% endfor %}
-          </select>
-
+          <nav class="sample_tweets"enter">
+            <ul>
+              {% for tweet in tweets_cltr3 %}
+              <li value= "{{tweet}}">{{tweet}}</li>
+              {% endfor %}
+            </ul>
+          </nav>
+          
           <h3>Cluster 4</h3>
-
-          <select name = "cluster4" style="width:500px">
-            {% for tweet in tweets_cltr4 %}
-            <option value= "{{tweet}}" >{{tweet}}</option>"
-            {% endfor %}
-          </select>
+          
+          <nav class="sample_tweets"enter">
+            <ul>
+              {% for tweet in tweets_cltr4 %}
+              <li value= "{{tweet}}">{{tweet}}</li>
+              {% endfor %}
+            </ul>
+          </nav>
           
           <h3>Cluster 5</h3>
-
-          <select name = "cluster5" style="width:500px">
-            {% for tweet in tweets_cltr5 %}
-            <option value= "{{tweet}}" >{{tweet}}</option>"
-            {% endfor %}
-          </select><br><br>
+          
+          <nav class="sample_tweets"enter">
+            <ul>
+              {% for tweet in tweets_cltr5 %}
+              <li value= "{{tweet}}">{{tweet}}</li>
+              {% endfor %}
+            </ul>
+          </nav>
 
         <h2>Top words</h2><br>
 
