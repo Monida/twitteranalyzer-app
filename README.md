@@ -1,13 +1,13 @@
-# **twitteranalyzer-app**<a id='contents'></a>
-
-<img src="static/twitter_nlp.png">
-
 -------------------------------------------------------------------------------------------------------------
 **Note: This project is no longer mantained. If you want to replicate it you need to do some modifications:**
 
 1. The Heroku [Stack](https://devcenter.heroku.com/articles/stack) used to build this project was Heroku-18, however from May 1st 2023, [it will be discontinued](https://help.heroku.com/X5OE6BCA/heroku-18-end-of-life-faq). Therefore, a new Heroku Stack needs to be used and the code might need to be modified to be compatible with it. The needed modifications are unknown.
 2. To run this project free Heroku Dynos, free Heroku Postgres, and free Heroku Data for Redis® were used, however, as of Nov 28th 2022, to have access to them you need to upgrade to a [new low-cost plan](https://blog.heroku.com/new-low-cost-plans). The code might also need some modifications to account for the upgrade however such modifications are unknown.
 -------------------------------------------------------------------------------------------------------------
+
+# **twitteranalyzer-app**<a id='contents'></a>
+
+<img src="static/twitter_nlp.png">
 
 This repository contains all the files of the TwitterAnalyzer Web-app.
 
